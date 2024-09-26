@@ -1,5 +1,5 @@
-import Joi from "joi";
-import { celebrate, Segments } from "celebrate";
+import Joi from 'joi';
+import { celebrate, Segments } from 'celebrate';
 
 export const authValidator = {
   register: celebrate({

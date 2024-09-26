@@ -1,115 +1,128 @@
-import { UsersService } from "./users.service";
+import { UsersService } from './users.service';
 
-describe("UsersService", () => {
+describe('UsersService', () => {
   // createUser method creates a new user with given name, email and password
-  it("should create a new user with given name, email and password", async () => {
+  it('should create a new user with given name, email and password', async () => {
     const userRepositoryMock = {
       create: jest.fn().mockResolvedValue({}),
     };
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
     const createUserDto = {
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "password123",
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: 'password123',
     };
     await usersService.createUser(createUserDto);
-    expect(userRepositoryMock.create).toHaveBeenCalledWith(createUserDto);
+    expect(userRepositoryMock.create).toHaveBeenCalledWith(
+      createUserDto,
+    );
   });
 
   // createAdmin method creates a new user with given name, email, password, role=admin
-  it("should create a new admin with given name, email, password, role=admin", async () => {
+  it('should create a new admin with given name, email, password, role=admin', async () => {
     const userRepositoryMock = {
       create: jest.fn().mockResolvedValue({}),
     };
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
     const createUserDto = {
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "password123",
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: 'password123',
     };
     await usersService.createAdmin(createUserDto);
     expect(userRepositoryMock.create).toHaveBeenCalledWith({
       ...createUserDto,
-      role: "admin",
+      role: 'admin',
     });
   });
 
   // getAllUsers method returns all users with role=user
-  it("should return all users with role=user", async () => {
+  it('should return all users with role=user', async () => {
     const userRepositoryMock = {
-      find: jest.fn().mockResolvedValue([{ role: "user" }, { role: "user" }]),
+      find: jest
+        .fn()
+        .mockResolvedValue([{ role: 'user' }, { role: 'user' }]),
     };
 
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
     // @ts-ignore
     const users = await usersService.getAllUsers();
-    expect(userRepositoryMock.find).toHaveBeenCalled()
+    expect(userRepositoryMock.find).toHaveBeenCalled();
     expect(users).toBeDefined();
   });
 
-
   // updateUser method updates user with given id and data
-  it("should update a user with given id and data", async () => {
+  it('should update a user with given id and data', async () => {
     const userRepositoryMock = {
       findByIdAndUpdate: jest.fn().mockResolvedValue({}),
     };
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
-    const userId = "123456789";
+    const userId = '123456789';
     const userData = {
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "password123",
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: 'password123',
     };
     await usersService.updateUser(userId, userData);
     expect(userRepositoryMock.findByIdAndUpdate).toHaveBeenCalledWith(
       userId,
       userData,
-      { new: true }
+      { new: true },
     );
   });
 
   // getAdmins method returns all users with role=admin
-  it("should return all users with role=admin when getAdmins method is called", async () => {
+  it('should return all users with role=admin when getAdmins method is called', async () => {
     const userRepositoryMock = {
-      find: jest.fn().mockResolvedValue([{ role: "admin" }, { role: "admin" }]),
+      find: jest
+        .fn()
+        .mockResolvedValue([{ role: 'admin' }, { role: 'admin' }]),
     };
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
-    const admins = await usersService.getAdmins();
+    const request = {
+      query: {
+        skip: 0,
+        limit: 10,
+      },
+    };
+    const admins = await usersService.getAdmins(request);
     expect(admins).toBeDefined(); // should return an array of admins
-    expect(userRepositoryMock.find).toHaveBeenCalled()
+    expect(userRepositoryMock.find).toHaveBeenCalled();
   });
 
   // deleteUser method deletes user with given id
-  it("should delete user when given id", async () => {
+  it('should delete user when given id', async () => {
     // Arrange
     const userRepositoryMock = {
       findByIdAndDelete: jest.fn().mockResolvedValue({}),
     };
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
-    const userId = "123456789";
+    const userId = '123456789';
 
     // Act
     await usersService.deleteUser(userId);
 
     // Assert
-    expect(userRepositoryMock.findByIdAndDelete).toHaveBeenCalledWith(userId);
+    expect(userRepositoryMock.findByIdAndDelete).toHaveBeenCalledWith(
+      userId,
+    );
   });
 
   // getUserById method returns user with given id
-  it("should return the user with the given id", async () => {
+  it('should return the user with the given id', async () => {
     // Arrange
-    const userId = "1234567890";
+    const userId = '1234567890';
     const userMock = {
       _id: userId,
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "password123",
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: 'password123',
     };
     const userRepositoryMock = {
       findById: jest.fn().mockResolvedValue(userMock),
@@ -126,13 +139,13 @@ describe("UsersService", () => {
   });
 
   // Should return the user object when a valid email is provided
-  it("should return the user object when a valid email is provided", async () => {
+  it('should return the user object when a valid email is provided', async () => {
     // Arrange
-    const email = "validemail@example.com";
+    const email = 'validemail@example.com';
     const user = {
-      name: "John Doe",
-      email: "validemail@example.com",
-      password: "password",
+      name: 'John Doe',
+      email: 'validemail@example.com',
+      password: 'password',
     };
     const userRepository = {
       findOne: jest.fn().mockResolvedValue(user),

@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
-import { config } from "../config/config";
+import jwt from 'jsonwebtoken';
+import { config } from '../config/config';
 
 export class AppError extends Error {
   code: number;
-    status: string;
-    error: any;
+  status: string;
+  error: any;
   /**
    * Custom Error - Create custom error object
    * @param {number} code HTTP status code
@@ -13,8 +13,8 @@ export class AppError extends Error {
   constructor(code: number, message: string, error?: any) {
     super(message);
     this.code = code;
-      this.status = code >= 400 && code < 500 ? "fail" : "error";
-      this.error = error;
+    this.status = code >= 400 && code < 500 ? 'fail' : 'error';
+    this.error = error;
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -27,7 +27,7 @@ export const createToken = (payload: any) => {
 
 export const getCelebrateErrorMessage = (err: any) => {
   return Array.from(
-    err?.details?.values()
+    err?.details?.values(),
     // @ts-ignore
-  )?.[0]?.details?.[0]?.message?.replace(/\"/g, "");
+  )?.[0]?.details?.[0]?.message?.replace(/\"/g, '');
 };

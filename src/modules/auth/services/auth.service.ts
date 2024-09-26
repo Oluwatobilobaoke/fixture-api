@@ -6,14 +6,19 @@ import bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private userService: UsersService) {}
   async registerUser(payload: RegisterUserType) {
-      // check if user with email already exists
-      const userExists = await this.userService.getUserByEmail(payload.email);
+    // check if user with email already exists
+    const userExists = await this.userService.getUserByEmail(
+      payload.email,
+    );
 
-      if (userExists) {
-        throw new AppError(400, `User with email ${payload.email} already exists`);
-      }
+    if (userExists) {
+      throw new AppError(
+        400,
+        `User with email ${payload.email} already exists`,
+      );
+    }
 
-      return await this.userService.createUser(payload);
+    return await this.userService.createUser(payload);
   }
 
   async registerAdmin(payload: RegisterUserType) {
