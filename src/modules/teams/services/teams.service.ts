@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 import { ITeamModel } from '../../../models/Team.model';
-import { CreateTeamDto } from '../dtos/TeamDto.dto';
+import { CreateTeamDto, UpdateTeamDto } from '../dtos/TeamDto.dto';
 import { getPagination } from '../../../library/pagination.utils';
 import { AppError } from '../../../helpers';
 
@@ -74,10 +74,10 @@ export class TeamsService {
   }
 
   async getTeamById(id: string) {
-    return this.teamRepository.findById(id);
+    return this.teamRepository.findOne({ _id: id, isDeleted: false });
   }
 
-  async updateTeam(id: string, data: any) {
+  async updateTeam(id: string, data: UpdateTeamDto) {
     return this.teamRepository.findByIdAndUpdate(id, data, {
       new: true,
     });

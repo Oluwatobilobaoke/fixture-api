@@ -29,12 +29,10 @@ export class UsersController {
   ) {
     try {
       const admins = await userService.getAdmins(req);
-      return res
-        .status(200)
-        .json({
-          message: 'Admins fetched successfully',
-          data: admins,
-        });
+      return res.status(200).json({
+        message: 'Admins fetched successfully',
+        data: admins,
+      });
     } catch (error) {
       Logger.error(error);
       next(error);

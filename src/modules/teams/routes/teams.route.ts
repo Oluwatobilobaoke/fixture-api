@@ -15,9 +15,12 @@ router.post(
   TeamsController.addTeam,
 );
 
-router.get('/', authenticate,
+router.get(
+  '/',
+  authenticate,
   teamsValidator.verifyTeamQuery,
-  TeamsController.getTeams);
+  TeamsController.getTeams,
+);
 
 router.get(
   '/:id',

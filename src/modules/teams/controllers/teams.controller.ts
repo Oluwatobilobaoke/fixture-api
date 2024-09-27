@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { TeamsService } from '../services/teams.service';
 import Team from '../../../models/Team.model';
 import { Logger } from '../../../library/Logger';
-import { UpdateTeamDto } from '../dtos/TeamDto.dto';
+import { CreateTeamDto, UpdateTeamDto } from '../dtos/TeamDto.dto';
 
 const teamService = new TeamsService(Team);
 
@@ -15,7 +15,7 @@ export class TeamsController {
     next: NextFunction,
   ) {
     try {
-      const team = await teamService.createTeam(req.body);
+      const team: CreateTeamDto = await teamService.createTeam(req.body);
       return res
         .status(201)
         .json({ message: 'Team created successfully', data: team });
@@ -53,12 +53,10 @@ export class TeamsController {
       const { id } = req.params;
       const payload: UpdateTeamDto = req.body;
       const product = await teamService.updateTeam(id, payload);
-      return res
-        .status(200)
-        .json({
-          message: 'Team updated successfully',
-          data: product,
-        });
+      return res.status(200).json({
+        message: 'Team updated successfully',
+        data: product,
+      });
     } catch (error) {
       Logger.error(error);
       next(error);

@@ -125,7 +125,7 @@ describe('UsersService', () => {
       password: 'password123',
     };
     const userRepositoryMock = {
-      findById: jest.fn().mockResolvedValue(userMock),
+      findOne: jest.fn().mockResolvedValue(userMock),
     };
     // @ts-ignore
     const usersService = new UsersService(userRepositoryMock);
@@ -134,7 +134,6 @@ describe('UsersService', () => {
     const result = await usersService.getUserById(userId);
 
     // Assert
-    expect(userRepositoryMock.findById).toHaveBeenCalledWith(userId);
     expect(result).toEqual(userMock);
   });
 

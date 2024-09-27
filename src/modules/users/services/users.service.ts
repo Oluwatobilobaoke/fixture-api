@@ -78,7 +78,7 @@ export class UsersService {
   }
 
   async getUserById(id: string) {
-    return this.userRepository.findById(id);
+    return this.userRepository.findOne({ _id: id, isDeleted: false });
   }
 
   async getUserByEmail(email: string) {

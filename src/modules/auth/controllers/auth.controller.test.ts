@@ -19,12 +19,10 @@ describe('AuthController', () => {
       json: jest.fn(),
     };
     const next = jest.fn();
-    authService.registerUser = jest
-      .fn()
-      .mockResolvedValueOnce({
-        name: 'John',
-        email: 'john@example.com',
-      });
+    authService.registerUser = jest.fn().mockResolvedValueOnce({
+      name: 'John',
+      email: 'john@example.com',
+    });
 
     // @ts-ignore
     await AuthController.registerUser(req, res, next);
@@ -42,12 +40,10 @@ describe('AuthController', () => {
       json: jest.fn(),
     };
     const next = jest.fn();
-    authService.registerAdmin = jest
-      .fn()
-      .mockResolvedValueOnce({
-        name: 'Admin',
-        email: 'admin@example.com',
-      });
+    authService.registerAdmin = jest.fn().mockResolvedValueOnce({
+      name: 'Admin',
+      email: 'admin@example.com',
+    });
     // @ts-ignore
     await AuthController.registerAdmin(req, res, next);
 
@@ -64,12 +60,10 @@ describe('AuthController', () => {
       json: jest.fn(),
     };
     const next = jest.fn();
-    authService.loginUser = jest
-      .fn()
-      .mockResolvedValueOnce({
-        name: 'John',
-        email: 'john@example.com',
-      });
+    authService.loginUser = jest.fn().mockResolvedValueOnce({
+      name: 'John',
+      email: 'john@example.com',
+    });
     // @ts-ignore
     await AuthController.login(req, res, next);
 

@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IFixture {
   homeTeam: string;
   awayTeam: string;
-  date: Date;
+  date: String;
   result?: string;
   homeResult?: string;
   awayResult?: string;
@@ -19,7 +19,7 @@ const FixtureSchema: Schema = new Schema(
   {
     homeTeam: { type: String, required: true },
     awayTeam: { type: String, required: true },
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     result: { type: String, default: '' },
     homeResult: { type: String, default: '' },
     awayResult: { type: String, default: '' },
@@ -28,7 +28,7 @@ const FixtureSchema: Schema = new Schema(
       enum: ['pending', 'completed', 'in-progress'],
       default: 'pending',
     },
-    uniqueLink: { type: String, required: true },
+    uniqueLink: { type: String, },
     isDeleted: { type: Boolean, default: false },
     isDeletedAt: { type: Date, default: null },
   },
@@ -41,7 +41,7 @@ const FixtureSchema: Schema = new Schema(
 // Index the combination of homeTeam, awayTeam, and date for faster querying
 FixtureSchema.index(
   { homeTeam: 1, awayTeam: 1, date: 1 },
-  { unique: true },
+  // { unique: true },
 );
 
 export default mongoose.model<IFixtureModel>(
