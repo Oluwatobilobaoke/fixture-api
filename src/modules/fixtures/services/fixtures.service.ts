@@ -47,6 +47,7 @@ export class FixturesService {
       homeTeam,
       awayTeam,
       date,
+      uniqueLink: `${homeTeam}-${awayTeam}-${date}`,
     })
 
   }
@@ -136,6 +137,7 @@ export class FixturesService {
       homeResult: fixture?.homeResult ?? '',
       awayResult: fixture?.awayResult ?? '',
       status: fixture?.status ?? '',
+      uniqueLink: fixture?.uniqueLink ?? '',
     };
   }
 }
