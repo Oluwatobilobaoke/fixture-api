@@ -32,7 +32,7 @@ const UserSchema: Schema = new Schema(
     versionKey: false,
   },
 );
-// Index the `email` `username` field to optimize search by email, username
+// Index the `email` field to optimize search by email
 UserSchema.index({ email: 1 });
 
 // Mongoose pre-hook to hash the password before saving

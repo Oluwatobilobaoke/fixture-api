@@ -18,6 +18,7 @@ const TeamSchema: Schema = new Schema(
       required: true,
       minlength: 3,
       maxlength: 25,
+      unique: true,
     },
     nickname: { type: String, minlength: 3, maxlength: 5 },
     city: { type: String, required: true },
@@ -32,6 +33,9 @@ const TeamSchema: Schema = new Schema(
 );
 
 // Index the `name` field to optimize search by name
-TeamSchema.index({ name: 1 });
+TeamSchema.index({
+  name: 'text',
+  nickname: 'text',
+});
 
 export default mongoose.model<ITeamModel>('teams', TeamSchema);

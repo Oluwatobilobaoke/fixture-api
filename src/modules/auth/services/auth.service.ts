@@ -22,6 +22,18 @@ export class AuthService {
   }
 
   async registerAdmin(payload: RegisterUserType) {
+    // check if admin with email already exists
+    const adminExists = await this.userService.getUserByEmail(
+      payload.email,
+    );
+
+    if (adminExists) {
+      throw new AppError(
+        400,
+        `Admin with email ${payload.email} already exists`,
+      );
+    }
+
     return await this.userService.createAdmin(payload);
   }
 

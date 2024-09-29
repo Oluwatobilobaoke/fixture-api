@@ -7,30 +7,23 @@ import { AppError } from '../../../helpers';
 export class TeamsService {
   constructor(private teamRepository: Model<ITeamModel>) {}
 
-  async createTeam({
-    name,
-    city,
-    nickname,
-    description,
-  }: CreateTeamDto) {
+  async createTeam(payload: CreateTeamDto) {
     // check if team with name or nickname already exists
-    const teamExists = await this.teamRepository.findOne({
-      $or: [{ name }, { nickname }],
-    });
+    const query: any = { $or: [{ name: payload.name }] };
+
+    if (payload.nickname) {
+      query.$or.push({ nickname: payload.nickname });
+    }
+
+    const teamExists = await this.teamRepository.findOne(query);
 
     if (teamExists) {
       throw new AppError(
         400,
-        `Team with name ${name} or nickname ${nickname} already exists`,
+        `Team with name ${payload.name} or nickname already exists`,
       );
     }
-
-    return await this.teamRepository.create({
-      name,
-      city,
-      nickname,
-      description,
-    });
+    return await this.teamRepository.create(payload);
   }
 
   async getAllTeamss(req: any) {

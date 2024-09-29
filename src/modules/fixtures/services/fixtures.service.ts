@@ -6,9 +6,9 @@ import {
 } from '../dtos/FixtureDto.dto';
 import { AppError } from '../../../helpers';
 import { getPagination } from '../../../library/pagination.utils';
-import { isTimestampInPast } from '../../../library/date.utils';
+import { isTimestampInPast, timestampToDate } from '../../../library/date.utils';
 
-export class FixtureService {
+export class FixturesService {
   constructor(private fixtureRepository: Model<IFixtureModel>) {}
 
   async createFixture({
@@ -16,15 +16,26 @@ export class FixtureService {
     awayTeam,
     date,
   }: CreateFixtureDto) {
-
     // validate date
     if (isTimestampInPast(Number(date)))
       throw new AppError(400, 'Date must be in the future');
 
     // check if fixture with homeTeam or awayTeam on that exact date already exists
-    const fixtureExists = await this.fixtureRepository.findOne({
-      $or: [{ homeTeam }, { awayTeam }, { date }],
+
+     // The homeTeam matches and the date matches, OR
+    //  The awayTeam matches and the date matches.
+
+      const fixtureExists = await this.fixtureRepository.findOne({
+      $or: [
+        { homeTeam, date },
+        { awayTeam, date },
+      ],
     });
+
+    // const fixtureExists = await this.fixtureRepository.findOne({
+    //   date,
+    //   $or: [{ homeTeam }, { awayTeam }],
+    // });
 
     if (fixtureExists)
       throw new AppError(
@@ -32,12 +43,12 @@ export class FixtureService {
         `Fixture with homeTeam ${homeTeam} or awayTeam ${awayTeam} on that exact date ${date} already exists`,
       );
 
-
-    return await this.fixtureRepository.create({
+    await this.fixtureRepository.create({
       homeTeam,
       awayTeam,
       date,
-    });
+    })
+
   }
 
   async getAllFixturess() {
@@ -49,10 +60,15 @@ export class FixtureService {
       isDeleted: false,
     };
     const search = request.query.search;
+    const status = request?.query?.status;
     if (search !== undefined && search.length) {
       queryObject.$text = {
         $search: search,
       };
+    }
+
+    if (status !== undefined && status.length) {
+      queryObject.status = status;
     }
 
     const skip = request.query.skip
@@ -64,6 +80,7 @@ export class FixtureService {
 
     const fixtures = await this.fixtureRepository
       .find(queryObject)
+      .populate(['homeTeam', 'awayTeam'])
       .skip(skip)
       .limit(limit)
       .exec();
@@ -75,13 +92,14 @@ export class FixtureService {
     const pagination = getPagination(count, skip, limit);
 
     return {
-      fixtures,
+      fixtures: fixtures.map(fixtures => this.formatFixtureResponse(fixtures)),
       pagination,
     };
   }
 
   async getFixtureById(id: string) {
-    return this.fixtureRepository.findOne({ _id: id, isDeleted: false });
+    const fixture = await this.fixtureRepository.findOne({ _id: id, isDeleted: false }).populate(['homeTeam', 'awayTeam']);
+    return this.formatFixtureResponse(fixture);
   }
 
   async updateFixture(id: string, data: UpdateFixtureDto) {
@@ -89,9 +107,11 @@ export class FixtureService {
     if (data?.date && isTimestampInPast(Number(data?.date)))
       throw new AppError(400, 'Date must be in the future');
 
-    return this.fixtureRepository.findByIdAndUpdate(id, data, {
+    const fixture = await this.fixtureRepository.findByIdAndUpdate(id, data, {
       new: true,
-    });
+    }).populate(['homeTeam', 'awayTeam']);
+
+    return this.formatFixtureResponse(fixture);
   }
 
   async deleteFixture(id: string) {
@@ -99,5 +119,23 @@ export class FixtureService {
       isDeleted: true,
       isDeletedAt: new Date(),
     });
+  }
+
+  formatFixtureResponse(fixture: any) {
+    return {
+      _id: fixture?._id,
+      homeTeam: {
+        name: fixture?.homeTeam?.name ?? '',
+        _id: fixture?.homeTeam?._id ?? '',
+      },
+      awayTeam: {
+        name: fixture?.awayTeam?.name ?? '',
+        _id: fixture?.awayTeam?._id ?? '',
+      },
+      date: fixture?.date ?? '',
+      homeResult: fixture?.homeResult ?? '',
+      awayResult: fixture?.awayResult ?? '',
+      status: fixture?.status ?? '',
+    };
   }
 }

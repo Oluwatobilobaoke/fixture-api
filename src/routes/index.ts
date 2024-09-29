@@ -1,6 +1,7 @@
 import { AuthRoutes } from '../modules/auth/routes/auth.route';
 import { UsersRoutes } from '../modules/users/routes/users.route';
 import { TeamRoutes } from '../modules/teams/routes/teams.route';
+import { FixtureRoutes } from '../modules/fixtures/routes/fixtures.route';
 
 const routes = [
   {
@@ -14,6 +15,10 @@ const routes = [
   {
     path: '/teams',
     router: TeamRoutes,
+  },
+  {
+    path: '/fixtures',
+    router: FixtureRoutes,
   },
 ];
 

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { Logger } from '../../../library/Logger';
-import { FixtureService } from '../services/fixtures.service';
+import { FixturesService } from '../services/fixtures.service';
 import { UpdateFixtureDto } from '../dtos/FixtureDto.dto';
 import Fixture from '../../../models/Fixture.model';
 
-const fixtureService = new FixtureService(Fixture);
+const fixtureService = new FixturesService(Fixture);
 
 export class FixturesController {
   static async addFixture(

@@ -4,7 +4,6 @@ export interface IFixture {
   homeTeam: string;
   awayTeam: string;
   date: String;
-  result?: string;
   homeResult?: string;
   awayResult?: string;
   status?: string; // pending, completed, in-progress
@@ -17,10 +16,17 @@ export interface IFixtureModel extends IFixture, Document {}
 
 const FixtureSchema: Schema = new Schema(
   {
-    homeTeam: { type: String, required: true },
-    awayTeam: { type: String, required: true },
+    homeTeam: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "teams",
+    },
+    awayTeam: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "teams",
+    },
     date: { type: String, required: true },
-    result: { type: String, default: '' },
     homeResult: { type: String, default: '' },
     awayResult: { type: String, default: '' },
     status: {
@@ -39,8 +45,10 @@ const FixtureSchema: Schema = new Schema(
 );
 
 // Index the combination of homeTeam, awayTeam, and date for faster querying
-FixtureSchema.index(
-  { homeTeam: 1, awayTeam: 1, date: 1 },
+FixtureSchema.index({
+    homeTeam: 'text',
+    awayTeam: 'text',
+    date: 'text'}
   // { unique: true },
 );
 

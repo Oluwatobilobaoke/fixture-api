@@ -4,7 +4,7 @@ import { celebrate, Segments } from 'celebrate';
 export const teamsValidator = {
   verifyBody: celebrate({
     [Segments.BODY]: Joi.object({
-      name: Joi.string().required(),
+      name: Joi.string().required().min(3).max(25),
       city: Joi.string().required(),
       description: Joi.string().optional(),
       nickname: Joi.string().optional(),

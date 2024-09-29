@@ -5,10 +5,7 @@ export class CreateFixtureDto {
 }
 
 export class UpdateFixtureDto {
-  homeTeam?: string;
-  awayTeam?: string;
   date?: string;
-  result?: string;
   homeResult?: string;
   awayResult?: string;
   status?: 'pending' | 'completed';
