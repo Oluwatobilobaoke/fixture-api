@@ -15,7 +15,9 @@ export class TeamsController {
     next: NextFunction,
   ) {
     try {
-      const team: CreateTeamDto = await teamService.createTeam(req.body);
+      const team: CreateTeamDto = await teamService.createTeam(
+        req.body,
+      );
       return res
         .status(201)
         .json({ message: 'Team created successfully', data: team });

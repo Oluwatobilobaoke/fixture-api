@@ -28,8 +28,7 @@ export type CreateFixtureType = {
   homeTeam: string;
   awayTeam: string;
   date: string;
-}
-
+};
 
 export type UpdateFixtureType = {
   homeTeam?: string;
@@ -40,4 +39,3 @@ export type UpdateFixtureType = {
   awayResult?: string;
   status?: 'pending' | 'completed';
 };
-

@@ -19,12 +19,12 @@ const FixtureSchema: Schema = new Schema(
     homeTeam: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "teams",
+      ref: 'teams',
     },
     awayTeam: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "teams",
+      ref: 'teams',
     },
     date: { type: String, required: true },
     homeResult: { type: String, default: '' },
@@ -34,7 +34,7 @@ const FixtureSchema: Schema = new Schema(
       enum: ['pending', 'completed', 'in-progress'],
       default: 'pending',
     },
-    uniqueLink: { type: String, },
+    uniqueLink: { type: String },
     isDeleted: { type: Boolean, default: false },
     isDeletedAt: { type: Date, default: null },
   },
@@ -45,10 +45,12 @@ const FixtureSchema: Schema = new Schema(
 );
 
 // Index the combination of homeTeam, awayTeam, and date for faster querying
-FixtureSchema.index({
+FixtureSchema.index(
+  {
     homeTeam: 'text',
     awayTeam: 'text',
-    date: 'text'}
+    date: 'text',
+  },
   // { unique: true },
 );
 

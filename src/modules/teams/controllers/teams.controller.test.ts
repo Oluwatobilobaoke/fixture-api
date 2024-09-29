@@ -2,20 +2,19 @@ import { TeamsService } from '../services/teams.service';
 import Team from '../../../models/Team.model';
 import { TeamsController } from './teams.controller';
 
-
 // const teamService = new TeamsService(Team); //
 
-jest.mock("../services/teams.service");
+jest.mock('../services/teams.service');
 
-describe("TeamsController", () => {
+describe('TeamsController', () => {
   // create team
-  it("should create a new team and return a 201 status code", async () => {
+  it('should create a new team and return a 201 status code', async () => {
     const req = {
       body: {
-        name: "Team Name",
-        city: "City Name",
-        nickname: "Nickname",
-        description: "Description",
+        name: 'Team Name',
+        city: 'City Name',
+        nickname: 'Nickname',
+        description: 'Description',
       },
     };
     const res = {
@@ -32,10 +31,10 @@ describe("TeamsController", () => {
   });
 
   // delete team
-  it("should delete a team", async () => {
+  it('should delete a team', async () => {
     const req = {
       params: {
-        id: "123",
+        id: '123',
       },
     };
     const res = {
@@ -51,16 +50,16 @@ describe("TeamsController", () => {
   });
 
   // edit team
-  it("should edit a team", async () => {
+  it('should edit a team', async () => {
     const req = {
       params: {
-        id: "123",
+        id: '123',
       },
       body: {
-        name: "Team Name",
-        city: "City Name",
-        nickname: "Nickname",
-        description: "Description",
+        name: 'Team Name',
+        city: 'City Name',
+        nickname: 'Nickname',
+        description: 'Description',
       },
     };
     const res = {
@@ -77,10 +76,10 @@ describe("TeamsController", () => {
   });
 
   // get team by id
-  it("should get a team by id", async () => {
+  it('should get a team by id', async () => {
     const req = {
       params: {
-        id: "123",
+        id: '123',
       },
     };
     const res = {
@@ -95,5 +94,4 @@ describe("TeamsController", () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalled();
   });
-
 });

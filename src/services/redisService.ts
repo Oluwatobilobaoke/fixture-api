@@ -22,7 +22,7 @@ export class RedisService {
     });
   }
 
-  async setCache(key: string, value: string): Promise<void> {
+  async setCache(key: string, value: any): Promise<void> {
     await this.client.set(key, JSON.stringify(value));
   }
 
@@ -45,32 +45,7 @@ export class RedisService {
   }
 
   // create key for saving data
-  createKey(key: string): string {
-    return `${key}:${new Date().getTime()}`;
+  createKey(key: string, id: string): string {
+    return `${key}:${id}`;
   }
-
-
-  // save team data to cache
-  async saveTeamToCache(key: string, value: any): Promise<void> {
-    await this.setCache(key, JSON.stringify(value));
-  }
-
-  // get team data from cache
-  async getTeamFromCache(key: string): Promise<any> {
-    const team = await this.getCache(key);
-    return team ? JSON.parse(team) : null;
-  }
-
-  // save fixtures data to cache
-  async saveFixturesToCache(key: string, value: any): Promise<void> {
-    await this.setCache(key, JSON.stringify(value));
-  }
-
-  // get fixtures data from cache
-  async getFixturesFromCache(key: string): Promise<any> {
-    const fixtures = await this.getCache(key);
-    return fixtures ? JSON.parse(fixtures) : null
-  }
-
-  // Other Redis methods...
 }

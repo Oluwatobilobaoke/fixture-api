@@ -1,8 +1,11 @@
 import { Model } from 'mongoose';
-import { ITeamModel } from '../../../models/Team.model';
+import Team, { ITeamModel } from '../../../models/Team.model';
 import { CreateTeamDto, UpdateTeamDto } from '../dtos/TeamDto.dto';
 import { getPagination } from '../../../library/pagination.utils';
 import { AppError } from '../../../helpers';
+import { RedisService } from '../../../services/redisService';
+
+const redisService = new RedisService();
 
 export class TeamsService {
   constructor(private teamRepository: Model<ITeamModel>) {}
@@ -23,7 +26,12 @@ export class TeamsService {
         `Team with name ${payload.name} or nickname already exists`,
       );
     }
-    return await this.teamRepository.create(payload);
+    const savedTeam = await this.teamRepository.create(payload);
+    // create key for caching and save team data to cache
+    const key = redisService.createKey('team', savedTeam._id);
+    redisService.setCache(key, savedTeam);
+
+    return savedTeam;
   }
 
   async getAllTeamss(req: any) {
@@ -67,19 +75,45 @@ export class TeamsService {
   }
 
   async getTeamById(id: string) {
-    return this.teamRepository.findOne({ _id: id, isDeleted: false });
+    // check cache for team data
+    const key = redisService.createKey('team', id);
+    let team = await redisService.getCache(key);
+    if (!team) {
+      team = await this.teamRepository.findOne({
+        _id: id,
+        isDeleted: false,
+      });
+      // save team data to cache
+      redisService.setCache(key, team);
+    }
+    return team;
   }
 
   async updateTeam(id: string, data: UpdateTeamDto) {
-    return this.teamRepository.findByIdAndUpdate(id, data, {
-      new: true,
-    });
+    const updatedTeam = await this.teamRepository.findByIdAndUpdate(
+      id,
+      data,
+      {
+        new: true,
+      },
+    );
+
+    // update team data in cache
+    const key = redisService.createKey('team', id);
+    redisService.setCache(key, updatedTeam);
   }
 
   async deleteTeam(id: string) {
-    return this.teamRepository.findByIdAndUpdate(id, {
-      isDeleted: true,
-      isDeletedAt: new Date(),
-    });
+    const deletedTeam = await this.teamRepository.findByIdAndUpdate(
+      id,
+      {
+        isDeleted: true,
+        isDeletedAt: new Date(),
+      },
+    );
+
+    // delete team data from cache
+    const key = redisService.createKey('team', id);
+    redisService.del(key);
   }
 }

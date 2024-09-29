@@ -1,12 +1,9 @@
-
 import { TeamsService } from './teams.service';
 import { UpdateTeamType } from '../../../types';
-
 
 describe('TeamsService', () => {
   // createTeam method creates a new team with given name, city, nickname, description
   it('should create a new team with given name, city, nickname, description', async () => {
-
     // @ts-ignore
     const createTeamDto = {
       name: 'Team Name',
@@ -24,9 +21,14 @@ describe('TeamsService', () => {
 
     await teamsService.createTeam(createTeamDto);
     expect(teamRepositoryMock.findOne).toHaveBeenCalledWith({
-      $or: [{ name: createTeamDto.name }, { nickname: createTeamDto.nickname }],
+      $or: [
+        { name: createTeamDto.name },
+        { nickname: createTeamDto.nickname },
+      ],
     });
-    expect(teamRepositoryMock.create).toHaveBeenCalledWith(createTeamDto);
+    expect(teamRepositoryMock.create).toHaveBeenCalledWith(
+      createTeamDto,
+    );
   });
 
   // // getAllTeams method returns all teams
@@ -45,7 +47,7 @@ describe('TeamsService', () => {
 
   // update team with given id and data successfully
   it('should update a team with given id and data', async () => {
-    const id = '124'
+    const id = '124';
     const data: UpdateTeamType = {
       name: 'Team Name',
       city: 'City Name',
@@ -56,7 +58,7 @@ describe('TeamsService', () => {
     const updatedTeam = {
       _id: id,
       ...data,
-    }
+    };
 
     const teamRepositoryMock = {
       findByIdAndUpdate: jest.fn().mockResolvedValue(updatedTeam),
@@ -68,14 +70,14 @@ describe('TeamsService', () => {
     expect(teamRepositoryMock.findByIdAndUpdate).toHaveBeenCalledWith(
       id,
       data,
-      { new: true }
+      { new: true },
     );
   });
 
   // update a team with invalid id
-  it("should throw an error when updating a team with invalid id", async () => {
+  it('should throw an error when updating a team with invalid id', async () => {
     // Arrange
-    const id = "123";
+    const id = '123';
     const data: UpdateTeamType = {
       name: 'Updated Team Name',
       city: 'Updated City Name',
@@ -85,7 +87,7 @@ describe('TeamsService', () => {
     const teamRepositoryMock = {
       findByIdAndUpdate: jest
         .fn()
-        .mockRejectedValue(new Error("Something went wrong")),
+        .mockRejectedValue(new Error('Something went wrong')),
     };
 
     const teamsService = new TeamsService(teamRepositoryMock as any);
@@ -98,7 +100,7 @@ describe('TeamsService', () => {
   it('should delete a team with given id', async () => {
     const id = '123';
 
-    const deletedTeam = null
+    const deletedTeam = null;
     const teamRepositoryMock = {
       findByIdAndUpdate: jest.fn().mockResolvedValue(deletedTeam),
     };
@@ -119,7 +121,7 @@ describe('TeamsService', () => {
       city: 'City Name',
       nickname: 'Nickname',
       description: 'Description',
-    }
+    };
 
     const teamRepositoryMock = {
       findOne: jest.fn().mockResolvedValue(team),
@@ -130,5 +132,4 @@ describe('TeamsService', () => {
     const result = await teamsService.getTeamById(id);
     expect(result).toBe(team);
   });
-
 });

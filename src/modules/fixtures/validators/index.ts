@@ -17,7 +17,9 @@ export const fixturesValidator = {
   }),
   verifyFixtureQuery: celebrate({
     [Segments.QUERY]: Joi.object({
-      status: Joi.string().valid(...statusEnum).optional(),
+      status: Joi.string()
+        .valid(...statusEnum)
+        .optional(),
       search: Joi.string().optional(),
       skip: Joi.string().optional(),
       limit: Joi.string().optional(),
@@ -34,7 +36,9 @@ export const fixturesValidator = {
       result: Joi.string().optional(),
       homeResult: Joi.string().optional(),
       awayResult: Joi.string().optional(),
-      status: Joi.string().valid(...statusEnum).optional(),
+      status: Joi.string()
+        .valid(...statusEnum)
+        .optional(),
     }),
   }),
-}
+};

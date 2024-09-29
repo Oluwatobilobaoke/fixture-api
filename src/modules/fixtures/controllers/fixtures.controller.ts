@@ -11,12 +11,13 @@ export class FixturesController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ){
+  ) {
     try {
       const fixture = await fixtureService.createFixture(req.body);
-      return res
-        .status(201)
-        .json({ message: 'Fixture created successfully', data: fixture });
+      return res.status(201).json({
+        message: 'Fixture created successfully',
+        data: fixture,
+      });
     } catch (error) {
       Logger.error(error);
       next(error);
@@ -27,13 +28,14 @@ export class FixturesController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ){
+  ) {
     try {
       const { id } = req.params;
       const fixture = await fixtureService.deleteFixture(id);
-      return res
-        .status(200)
-        .json({ message: 'Fixture deleted successfully', data: fixture });
+      return res.status(200).json({
+        message: 'Fixture deleted successfully',
+        data: fixture,
+      });
     } catch (error) {
       Logger.error(error);
       next(error);
@@ -45,7 +47,7 @@ export class FixturesController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ){
+  ) {
     try {
       const { id } = req.params;
       const payload: UpdateFixtureDto = req.body;
@@ -65,7 +67,7 @@ export class FixturesController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ){
+  ) {
     try {
       const { id } = req.params;
       const fixture = await fixtureService.getFixtureById(id);
@@ -84,7 +86,7 @@ export class FixturesController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ){
+  ) {
     try {
       const fixtures = await fixtureService.getAllFixtures(req);
       return res.status(200).json({

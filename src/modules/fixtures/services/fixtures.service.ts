@@ -1,12 +1,18 @@
 import { Model } from 'mongoose';
-import { IFixture, IFixtureModel } from '../../../models/Fixture.model';
+import {
+  IFixture,
+  IFixtureModel,
+} from '../../../models/Fixture.model';
 import {
   CreateFixtureDto,
   UpdateFixtureDto,
 } from '../dtos/FixtureDto.dto';
 import { AppError } from '../../../helpers';
 import { getPagination } from '../../../library/pagination.utils';
-import { isTimestampInPast, timestampToDate } from '../../../library/date.utils';
+import {
+  isTimestampInPast,
+  timestampToDate,
+} from '../../../library/date.utils';
 
 export class FixturesService {
   constructor(private fixtureRepository: Model<IFixtureModel>) {}
@@ -22,10 +28,10 @@ export class FixturesService {
 
     // check if fixture with homeTeam or awayTeam on that exact date already exists
 
-     // The homeTeam matches and the date matches, OR
+    // The homeTeam matches and the date matches, OR
     //  The awayTeam matches and the date matches.
 
-      const fixtureExists = await this.fixtureRepository.findOne({
+    const fixtureExists = await this.fixtureRepository.findOne({
       $or: [
         { homeTeam, date },
         { awayTeam, date },
@@ -48,8 +54,7 @@ export class FixturesService {
       awayTeam,
       date,
       uniqueLink: `${homeTeam}-${awayTeam}-${date}`,
-    })
-
+    });
   }
 
   async getAllFixturess() {
@@ -93,13 +98,17 @@ export class FixturesService {
     const pagination = getPagination(count, skip, limit);
 
     return {
-      fixtures: fixtures.map(fixtures => this.formatFixtureResponse(fixtures)),
+      fixtures: fixtures.map((fixtures) =>
+        this.formatFixtureResponse(fixtures),
+      ),
       pagination,
     };
   }
 
   async getFixtureById(id: string) {
-    const fixture = await this.fixtureRepository.findOne({ _id: id, isDeleted: false }).populate(['homeTeam', 'awayTeam']);
+    const fixture = await this.fixtureRepository
+      .findOne({ _id: id, isDeleted: false })
+      .populate(['homeTeam', 'awayTeam']);
     return this.formatFixtureResponse(fixture);
   }
 
@@ -108,9 +117,11 @@ export class FixturesService {
     if (data?.date && isTimestampInPast(Number(data?.date)))
       throw new AppError(400, 'Date must be in the future');
 
-    const fixture = await this.fixtureRepository.findByIdAndUpdate(id, data, {
-      new: true,
-    }).populate(['homeTeam', 'awayTeam']);
+    const fixture = await this.fixtureRepository
+      .findByIdAndUpdate(id, data, {
+        new: true,
+      })
+      .populate(['homeTeam', 'awayTeam']);
 
     return this.formatFixtureResponse(fixture);
   }
