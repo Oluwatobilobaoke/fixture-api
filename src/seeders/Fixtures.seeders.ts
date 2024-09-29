@@ -67,12 +67,45 @@ const fixtures = [
 export const seedFixtures = async () => {
   try {
     // get teams from the database
-    const teams = await TeamModel.find({
+    let teams = await TeamModel.find({
       isDeleted: false,
     });
 
-    console.log('Teams', teams);
-    // await FixtureModel.insertMany(fixtures);
+    // pick first 5 teams
+    // teams = teams.slice(0, 10);
+
+
+    const fixtures = [];
+    let baseDate = 1759179224000; // Starting date in milliseconds
+
+    for (let i = 0; i < teams.length - 1; i++) {
+      for (let j = i + 1; j < teams.length; j++) {
+        const homeTeam = teams[i]._id;
+        const awayTeam = teams[j]._id;
+
+        const status = i % 2 === 0 ? 'pending' : 'completed';
+
+        const fixture = {
+          homeTeam,
+          awayTeam,
+          date: (baseDate += 1000).toString(),
+          status,
+          uniqueLink: `fixture-${homeTeam}-${awayTeam}-${baseDate}`,
+          homeResult: '',
+          awayResult: '',
+        };
+
+        // If status is "completed", add homeResult and awayResult
+        if (status === 'completed') {
+          fixture.homeResult = (Math.floor(Math.random() * 5)).toString(); // Random result between 0 and 4
+          fixture.awayResult = Math.floor(Math.random() * 5).toString(); // Random result between 0 and 4
+        }
+
+        fixtures.push(fixture);
+      }
+    }
+
+    await FixtureModel.insertMany(fixtures);
     console.log('Fixtures seeded successfully');
   } catch (error) {
     console.error('Error seeding fixtures', error);

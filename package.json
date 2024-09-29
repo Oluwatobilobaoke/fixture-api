@@ -9,7 +9,7 @@
     "start:dev": "tsc && node --watch --watch-path ./dist dist/server.js",
     "jest": "npx jest --coverage",
     "format": "prettier --write .",
-    "seed": "node dist/seeders/index.seeders.js"
+    "seed": "tsc && node dist/seeders/index.seeders.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

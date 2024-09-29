@@ -26,9 +26,9 @@ export const seeders = async () => {
 
   console.log('Running seeders...');
 
-  // await seedTeams();
+  await seedTeams();
+  await seedUsers();
   await seedFixtures();
-  // await seedUsers();
 
   console.log('Seeders run successfully');
 }
