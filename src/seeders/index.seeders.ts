@@ -34,3 +34,6 @@ export const seeders = async () => {
 seeders()
   .then((r) => {})
   .catch((e) => console.error(e));
+
+// exit
+
