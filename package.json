@@ -8,7 +8,8 @@
     "build": "rm -rf build && tsc -p .",
     "start:dev": "tsc && node --watch --watch-path ./dist dist/server.js",
     "jest": "npx jest --coverage",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "seed": "node dist/seeders/index.seeders.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
