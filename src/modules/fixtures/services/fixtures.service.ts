@@ -13,6 +13,9 @@ import {
   isTimestampInPast,
   timestampToDate,
 } from '../../../library/date.utils';
+import { RedisService } from '../../../services/redisService';
+
+const redisService = new RedisService();
 
 export class FixturesService {
   constructor(private fixtureRepository: Model<IFixtureModel>) {}

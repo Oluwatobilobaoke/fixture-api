@@ -75,22 +75,21 @@ export class TeamsService {
   }
 
   async getTeamById(id: string) {
-    // check cache for team data
     const key = redisService.createKey('team', id);
     let team = await redisService.getCache(key);
-    if (!team) {
-      team = await this.teamRepository.findOne({
-        _id: id,
-        isDeleted: false,
-      });
-      // save team data to cache
-      redisService.setCache(key, team);
+
+    if (team) {
+      return JSON.parse(team);
     }
+
+    team = await this.teamRepository.findOne({ _id: id, isDeleted: false });
+    redisService.setCache(key, team);
+
     return team;
   }
 
   async updateTeam(id: string, data: UpdateTeamDto) {
-    const updatedTeam = await this.teamRepository.findByIdAndUpdate(
+    const team = await this.teamRepository.findByIdAndUpdate(
       id,
       data,
       {
@@ -100,11 +99,11 @@ export class TeamsService {
 
     // update team data in cache
     const key = redisService.createKey('team', id);
-    redisService.setCache(key, updatedTeam);
+    redisService.setCache(key, team);
   }
 
   async deleteTeam(id: string) {
-    const deletedTeam = await this.teamRepository.findByIdAndUpdate(
+     await this.teamRepository.findByIdAndUpdate(
       id,
       {
         isDeleted: true,

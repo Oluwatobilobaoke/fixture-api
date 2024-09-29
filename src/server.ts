@@ -26,7 +26,7 @@ mongoose
     Logger.error(error);
   });
 
-new RedisService();
+// new RedisService();
 
 const startServer = () => {
   app.use((req, res, next) => {
