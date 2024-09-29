@@ -82,7 +82,10 @@ export class TeamsService {
       return JSON.parse(team);
     }
 
-    team = await this.teamRepository.findOne({ _id: id, isDeleted: false });
+    team = await this.teamRepository.findOne({
+      _id: id,
+      isDeleted: false,
+    });
     redisService.setCache(key, team);
 
     return team;
@@ -103,13 +106,10 @@ export class TeamsService {
   }
 
   async deleteTeam(id: string) {
-     await this.teamRepository.findByIdAndUpdate(
-      id,
-      {
-        isDeleted: true,
-        isDeletedAt: new Date(),
-      },
-    );
+    await this.teamRepository.findByIdAndUpdate(id, {
+      isDeleted: true,
+      isDeletedAt: new Date(),
+    });
 
     // delete team data from cache
     const key = redisService.createKey('team', id);

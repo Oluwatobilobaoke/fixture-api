@@ -60,8 +60,8 @@ const fixtures = [
     awayTeam: 'Brighton & Hove Albion',
     date: '1759159214000',
     status: 'pending',
-  }
-]
+  },
+];
 
 // seed the fixtures table with the data
 export const seedFixtures = async () => {
@@ -73,7 +73,6 @@ export const seedFixtures = async () => {
 
     // pick first 5 teams
     // teams = teams.slice(0, 10);
-
 
     const fixtures = [];
     let baseDate = 1759179224000; // Starting date in milliseconds
@@ -97,8 +96,12 @@ export const seedFixtures = async () => {
 
         // If status is "completed", add homeResult and awayResult
         if (status === 'completed') {
-          fixture.homeResult = (Math.floor(Math.random() * 5)).toString(); // Random result between 0 and 4
-          fixture.awayResult = Math.floor(Math.random() * 5).toString(); // Random result between 0 and 4
+          fixture.homeResult = Math.floor(
+            Math.random() * 5,
+          ).toString(); // Random result between 0 and 4
+          fixture.awayResult = Math.floor(
+            Math.random() * 5,
+          ).toString(); // Random result between 0 and 4
         }
 
         fixtures.push(fixture);
@@ -110,7 +113,4 @@ export const seedFixtures = async () => {
   } catch (error) {
     console.error('Error seeding fixtures', error);
   }
-}
-
-
-
+};

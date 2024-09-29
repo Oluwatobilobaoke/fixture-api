@@ -8,49 +8,41 @@ const teams = [
   {
     name: 'Chelsea',
     city: 'London',
-
   },
   {
     name: 'Manchester United',
 
     city: 'London',
-
   },
   {
     name: 'Liverpool',
 
     city: 'London',
-
   },
   {
     name: 'Manchester City',
 
     city: 'London',
-
   },
   {
     name: 'Tottenham Hotspur',
 
     city: 'London',
-
   },
   {
     name: 'Leicester City',
 
     city: 'London',
-
   },
   {
     name: 'Everton',
 
     city: 'London',
-
   },
   {
     name: 'West Ham United',
 
     city: 'London',
-
   },
   {
     name: 'Aston Villa',
@@ -98,8 +90,8 @@ const teams = [
     name: 'West Bromwich Albion',
 
     city: 'London',
-  }
-]
+  },
+];
 
 // seed the teams table with the data
 export const seedTeams = async () => {
@@ -110,4 +102,4 @@ export const seedTeams = async () => {
     console.error('Error seeding teams');
     console.error(error);
   }
-}
+};

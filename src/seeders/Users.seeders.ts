@@ -5,7 +5,7 @@ const Users = [
     name: 'John Doe',
     email: 'johndoe@yopmail.com',
     password: 'password',
-    role: 'admin'
+    role: 'admin',
   },
   {
     name: 'Jane Doe',
@@ -16,11 +16,11 @@ const Users = [
     name: 'Alice',
     email: 'alice@mailinator.com',
     password: 'password',
-  }
-]
+  },
+];
 
 export const seedUsers = async () => {
   // seed the users table with the data
   await UserModel.insertMany(Users);
   console.log('Users seeded successfully');
-}
+};
