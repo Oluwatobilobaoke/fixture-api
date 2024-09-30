@@ -2,6 +2,7 @@ import express from 'express';
 import { AuthController } from '../controllers/auth.controller';
 import { authValidator } from '../validators';
 import { sessionAuth } from '../../../middleware/authorize-user';
+import userRateLimiter from '../../../middleware/limiter';
 
 const router = express();
 
@@ -16,6 +17,6 @@ router.post(
   AuthController.registerAdmin,
 );
 router.post('/login', authValidator.login, AuthController.login);
-router.post('/logout', sessionAuth, AuthController.logout);
+router.post('/logout', sessionAuth, userRateLimiter, AuthController.logout);
 
 export const AuthRoutes = router;

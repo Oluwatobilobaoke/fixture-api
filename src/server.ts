@@ -78,8 +78,6 @@ const configureApp = () => {
   // ROUTES
   appRoutes(app);
 
-  app.use('/', sessionAuth, userRateLimiter);
-
   // DEFAULT
   app.get('/', (req, res) => {
     return res.status(200).json({

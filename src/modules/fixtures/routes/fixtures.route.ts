@@ -5,39 +5,40 @@ import {
 } from '../../../middleware/authorize-user';
 import { FixturesController } from '../controllers/fixtures.controller';
 import { fixturesValidator } from '../validators';
+import userRateLimiter from '../../../middleware/limiter';
 const router = express();
 
 router.post(
   '/',
-  authenticateAndisAdmin,
+  authenticateAndisAdmin,userRateLimiter,
   fixturesValidator.verifyBody,
   FixturesController.addFixture,
 );
 
 router.get(
   '/',
-  sessionAuth,
+  sessionAuth,userRateLimiter,
   fixturesValidator.verifyFixtureQuery,
   FixturesController.getFixtures,
 );
 
 router.get(
   '/:id',
-  sessionAuth,
+  sessionAuth,userRateLimiter,
   fixturesValidator.verifyFixtureParams,
   FixturesController.getFixture,
 );
 
 router.patch(
   '/:id',
-  authenticateAndisAdmin,
+  authenticateAndisAdmin,userRateLimiter,
   fixturesValidator.verifyFixtureParamsAndBody,
   FixturesController.editFixture,
 );
 
 router.delete(
   '/:id',
-  authenticateAndisAdmin,
+  authenticateAndisAdmin,userRateLimiter,
   fixturesValidator.verifyFixtureParams,
   FixturesController.deleteFixture,
 );

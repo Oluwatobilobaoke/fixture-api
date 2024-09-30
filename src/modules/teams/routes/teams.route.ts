@@ -5,40 +5,41 @@ import {
 } from '../../../middleware/authorize-user';
 import { teamsValidator } from '../validators';
 import { TeamsController } from '../controllers/teams.controller';
+import userRateLimiter from '../../../middleware/limiter';
 
 const router = express();
 
 router.post(
   '/',
-  authenticateAndisAdmin,
+  authenticateAndisAdmin, userRateLimiter,
   teamsValidator.verifyBody,
   TeamsController.addTeam,
 );
 
 router.get(
   '/',
-  sessionAuth,
+  sessionAuth, userRateLimiter,
   teamsValidator.verifyTeamQuery,
   TeamsController.getTeams,
 );
 
 router.get(
   '/:id',
-  sessionAuth,
+  sessionAuth,userRateLimiter,
   teamsValidator.verifyTeamParams,
   TeamsController.getTeam,
 );
 
 router.patch(
   '/:id',
-  authenticateAndisAdmin,
+  authenticateAndisAdmin,userRateLimiter,
   teamsValidator.verifyProductParamsAndBody,
   TeamsController.editTeam,
 );
 
 router.delete(
   '/:id',
-  authenticateAndisAdmin,
+  authenticateAndisAdmin, userRateLimiter,
   teamsValidator.verifyTeamParams,
   TeamsController.deleteTeam,
 );
