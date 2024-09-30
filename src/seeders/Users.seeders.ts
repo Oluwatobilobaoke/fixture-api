@@ -1,7 +1,8 @@
 import UserModel from '../models/User.model';
-const password = "password";
+const password = 'password';
 // bcrypt hashpaassword
-const hashedPassword = "$2a$10$0360tdqQ0pq1lVmtzZd0cuIcgJwAyPWO4AbzSoEz6wU1eC.0FJEpC"
+const hashedPassword =
+  '$2a$10$0360tdqQ0pq1lVmtzZd0cuIcgJwAyPWO4AbzSoEz6wU1eC.0FJEpC';
 const Users = [
   {
     name: 'John Doe',

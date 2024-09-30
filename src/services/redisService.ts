@@ -29,7 +29,7 @@ class RedisService {
   // set with expiration
   async setex(
     key: string,
-    value: string,
+    value: any,
     expiration: number,
   ): Promise<void> {
     await this.client.setex(key, expiration, JSON.stringify(value));

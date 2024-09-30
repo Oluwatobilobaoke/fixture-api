@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "rm -rf build && tsc -p .",
-    "start:dev": "tsc && node --watch --watch-path ./dist dist/server.js",
+    "start:dev": "tsc-watch --onSuccess \"node dist/server.js\"",
     "jest": "npx jest --coverage",
     "format": "prettier --write .",
     "seed": "tsc && node dist/seeders/index.seeders.js"
@@ -38,6 +38,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "prettier": "^3.3.3",
     "ts-jest": "^29.1.1",
+    "tsc-watch": "^6.2.0",
     "typescript": "^5.3.2"
   }
 }

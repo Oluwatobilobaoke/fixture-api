@@ -2,6 +2,9 @@ import { FixturesService } from './fixtures.service';
 import { CreateFixtureType } from '../../../types';
 
 describe('FixturesService', () => {
+  const teamRepositoryMock = {
+    findOne: jest.fn().mockResolvedValue(null),
+  };
   // createFixture method creates a new fixture with given data
   it('should create a new fixture with given data', async () => {
     const createFixtureDto: CreateFixtureType = {
@@ -17,6 +20,7 @@ describe('FixturesService', () => {
 
     const fixturesService = new FixturesService(
       fixtureRepositoryMock as any,
+      teamRepositoryMock as any,
     );
 
     await fixturesService.createFixture(createFixtureDto);
@@ -52,6 +56,7 @@ describe('FixturesService', () => {
 
     const fixturesService = new FixturesService(
       fixtureRepositoryMock as any,
+      teamRepositoryMock as any,
     );
 
     await fixturesService.updateFixture(id, data);
@@ -77,6 +82,7 @@ describe('FixturesService', () => {
 
     const fixturesService = new FixturesService(
       fixtureRepositoryMock as any,
+      teamRepositoryMock as any,
     );
 
     await expect(
@@ -96,6 +102,7 @@ describe('FixturesService', () => {
 
     const fixturesService = new FixturesService(
       fixtureRepositoryMock as any,
+      teamRepositoryMock as any,
     );
 
     const result = await fixturesService.deleteFixture(id);
@@ -119,6 +126,7 @@ describe('FixturesService', () => {
 
     const fixturesService = new FixturesService(
       fixtureRepositoryMock as any,
+      teamRepositoryMock as any,
     );
 
     const result = await fixturesService.getFixtureById(id);

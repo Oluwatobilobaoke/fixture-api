@@ -47,12 +47,16 @@ const FixtureSchema: Schema = new Schema(
 // Index the combination of homeTeam, awayTeam, and date for faster querying
 FixtureSchema.index(
   {
-    homeTeam: 'text',
-    awayTeam: 'text',
-    date: 'text',
+    homeTeam: 1,
+    awayTeam: 1,
+    date: 1,
   },
-  // { unique: true },
+  { unique: true },
 );
+
+// Additional indexes for frequently queried fields
+FixtureSchema.index({ status: 1 });
+FixtureSchema.index({ uniqueLink: 1 }, { unique: true });
 
 export default mongoose.model<IFixtureModel>(
   'fixtures',

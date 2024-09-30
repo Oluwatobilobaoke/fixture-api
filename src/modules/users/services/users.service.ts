@@ -5,8 +5,6 @@ import { getPagination } from '../../../library/pagination.utils';
 import { IGeT } from '../../common/interface';
 import redisService from '../../../services/redisService';
 
-
-
 export class UsersService {
   constructor(private userRepository: Model<IUserModel>) {}
   async createUser({ name, email, password }: CreateUserDto) {

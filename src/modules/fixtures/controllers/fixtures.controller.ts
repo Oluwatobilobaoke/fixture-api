@@ -3,8 +3,8 @@ import { Logger } from '../../../library/Logger';
 import { FixturesService } from '../services/fixtures.service';
 import { UpdateFixtureDto } from '../dtos/FixtureDto.dto';
 import Fixture from '../../../models/Fixture.model';
-
-const fixtureService = new FixturesService(Fixture);
+import Team from '../../../models/Team.model';
+const fixtureService = new FixturesService(Fixture, Team);
 
 export class FixturesController {
   static async addFixture(

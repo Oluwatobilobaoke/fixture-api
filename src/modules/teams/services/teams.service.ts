@@ -37,44 +37,60 @@ export class TeamsService {
   }
 
   async getAllTeams(request: any) {
-    const queryObject: any = {
-      isDeleted: false,
-    };
-    const search = request.query.search;
-    if (search !== undefined && search.length) {
-      queryObject.$text = {
-        $search: search,
-      };
+    const { search, skip = 0, limit = 10 } = request.query;
+    const queryObject: any = { isDeleted: false };
+
+    // Create a cache key based on the query parameters
+    const cacheKey = redisService.createKey(
+      'allTeams',
+      JSON.stringify({ search, skip, limit }),
+    );
+
+    // Try to get data from cache
+    const cachedData = await redisService.getCache(cacheKey);
+    if (cachedData) {
+      return JSON.parse(cachedData);
     }
 
-    const skip = request.query.skip
-      ? parseInt(request.query.skip)
-      : 0;
-    const limit = request.query.limit
-      ? parseInt(request.query.limit)
-      : 10;
+    // If not in cache, perform the database query
+    if (search) {
+      queryObject.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { nickname: { $regex: search, $options: 'i' } },
+      ];
+    }
 
-    const teams = await this.teamRepository
-      .find(queryObject)
-      .skip(skip)
-      .limit(limit)
-      .exec();
+    const [teams, count] = await Promise.all([
+      this.teamRepository
+        .find(queryObject)
+        .skip(Number(skip))
+        .limit(Number(limit))
+        .lean()
+        .exec(),
+      this.teamRepository.countDocuments(queryObject).exec(),
+    ]);
 
-    const count = await this.teamRepository
-      .countDocuments(queryObject)
-      .exec();
+    const pagination = getPagination(
+      count,
+      Number(skip),
+      Number(limit),
+    );
 
-    const pagination = getPagination(count, skip, limit);
+    const result = { teams, pagination };
 
-    return {
-      teams,
-      pagination,
-    };
+    // Cache the result
+    await redisService.setex(
+      cacheKey,
+      JSON.stringify(result),
+      300,
+    ); // Cache for 5 min
+
+    return result;
   }
 
   async getTeamById(id: string) {
     const key = redisService.createKey('team', id);
-    let team = await redisService.getCache(key); 
+    let team = await redisService.getCache(key);
 
     if (team) {
       return JSON.parse(team);

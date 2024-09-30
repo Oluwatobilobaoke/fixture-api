@@ -74,7 +74,7 @@ export class AuthController {
     next: NextFunction,
   ) {
     try {
-        //@ts-ignore
+      //@ts-ignore
       req.session.destroy((err) => {
         if (err) {
           return res.status(500).json({ message: 'Logout failed' });

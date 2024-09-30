@@ -33,9 +33,12 @@ const TeamSchema: Schema = new Schema(
 );
 
 // Index the `name` field to optimize search by name
-TeamSchema.index({
-  name: 'text',
-  nickname: 'text',
-});
+TeamSchema.index({ name: 1, city: 1 }, { unique: true });
+
+// Create a separate index for nickname
+TeamSchema.index({ nickname: 1 });
+
+// Create a text index for name and description to enable text search
+TeamSchema.index({ name: 'text', description: 'text' });
 
 export default mongoose.model<ITeamModel>('teams', TeamSchema);

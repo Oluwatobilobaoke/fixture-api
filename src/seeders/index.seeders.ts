@@ -15,6 +15,7 @@ export const seeders = async () => {
     })
     .then(async () => {
       console.log('MongoDB connected for seeders');
+      //@ts-ignore
       await mongoose.connection.db.dropDatabase();
     })
     .catch((error) => {
@@ -34,6 +35,3 @@ export const seeders = async () => {
 seeders()
   .then((r) => {})
   .catch((e) => console.error(e));
-
-// exit
-
