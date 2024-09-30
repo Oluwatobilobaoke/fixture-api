@@ -7,7 +7,6 @@ import Team from '../src/models/Team.model';
 import Fixture from '../src/models/Fixture.model';
 import { Express } from 'express';
 
-// Add this function at the top of the file, outside the describe block
 async function makeAuthenticatedAgent(
   app: Express,
   email: string,
@@ -188,6 +187,31 @@ it('should get all fixtures as user', async () => {
 
   expect(response.status).toBe(200);
   expect(response.body.message).toBe('Fixture fetched successfully');
+  });
+
+
+  it('should get completed fixtures as user', async () => {
+    const response = await userAgent.get('/api/v1/fixtures?status=completed');
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Fixtures fetched successfully');
+    expect(response.body.data.fixtures).toBeDefined();
+    expect(Array.isArray(response.body.data.fixtures)).toBe(true);
+    response.body.data.fixtures.forEach((fixture: any) => {
+      expect(fixture.status).toBe('completed');
+    });
+  });
+
+  it('should get pending fixtures as user', async () => {
+    const response = await userAgent.get('/api/v1/fixtures?status=pending');
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Fixtures fetched successfully');
+    expect(response.body.data.fixtures).toBeDefined();
+    expect(Array.isArray(response.body.data.fixtures)).toBe(true);
+    response.body.data.fixtures.forEach((fixture: any) => {
+      expect(fixture.status).toBe('pending');
+    });
   });
   
   it('should fail to update a fixture as user', async () => {

@@ -4,9 +4,21 @@ import { config } from '../src/config/config';
 import { app } from '../src/server';
 import User from '../src/models/User.model';
 import Team from '../src/models/Team.model';
+import { Express } from 'express';
 
+
+async function makeAuthenticatedAgent(
+  app: Express,
+  email: string,
+  password: string,
+) {
+  const agent = request.agent(app);
+  await agent.post('/api/v1/auth/login').send({ email, password });
+  return agent;
+}
 describe('Teams E2E Tests', () => {
-  let adminToken: string;
+  let adminAgent: request.SuperAgentTest;
+  let userAgent: request.SuperAgentTest;
   let teamIds: string[] = [];
 
   beforeAll(async () => {
@@ -15,6 +27,34 @@ describe('Teams E2E Tests', () => {
       w: 'majority',
       dbName: config.mongo.dbNameTest,
     });
+
+        // Register admin user
+    await request(app).post('/api/v1/auth/register/admins').send({
+      name: 'Admin User',
+      email: 'admin@example.com',
+      password: 'password123',
+    });
+
+    // Register regular user
+    await request(app).post('/api/v1/auth/register/users').send({
+      name: 'Regular User',
+      email: 'user@example.com',
+      password: 'password123',
+    });
+
+    // Create authenticated agents
+    //@ts-ignore
+    adminAgent = (await makeAuthenticatedAgent(
+      app,
+      'admin@example.com',
+      'password123',
+    ));
+    //@ts-ignore
+    userAgent = (await makeAuthenticatedAgent(
+      app,
+      'user@example.com',
+      'password123',
+    ));
   });
 
   afterAll(async () => {
@@ -23,45 +63,12 @@ describe('Teams E2E Tests', () => {
     await mongoose.connection.close();
   });
 
-  it('should register an admin', async () => {
-    const response = await request(app)
-      .post('/api/v1/auth/register/admins')
-      .send({
-        name: 'Admin User',
-        email: 'admin@example.com',
-        password: 'password123',
-      });
-
-    expect(response.status).toBe(201);
-    expect(response.body.message).toBe('Admin created successfully');
-  });
-
-  it('should login as admin', async () => {
-    const response = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: 'admin@example.com',
-        password: 'password123',
-      });
-
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe('User logged in successfully');
-    expect(response.body.data).toHaveProperty('access_token');
-    adminToken = response.body.data.access_token;
-  });
-
-  it('should create 3 teams', async () => {
+  it('Admin should create 3 teams', async () => {
     const teamNames = ['Team A', 'Team B', 'Team C', 'Team D'];
     for (const name of teamNames) {
-      // Verify that the session contains the admin user
-      const agent = request.agent(app);
-      await agent.post('/api/v1/auth/login').send({
-        email: 'admin@example.com',
-        password: 'password123',
-      });
-
+        
       // Use the authenticated session to create a team
-      const response = await agent
+      const response = await adminAgent
         .post('/api/v1/teams')
         .send({ name, city: `City of ${name}` });
 
@@ -72,14 +79,9 @@ describe('Teams E2E Tests', () => {
     expect(teamIds.length).toBe(4);
   });
 
-  it('should edit a team', async () => {
-    const agent = request.agent(app);
-    await agent.post('/api/v1/auth/login').send({
-      email: 'admin@example.com',
-      password: 'password123',
-    });
-
-    const response = await agent
+  it('Adminshould edit a team', async () => {
+   
+    const response = await adminAgent
       .patch(`/api/v1/teams/${teamIds[0]}`)
       .send({ name: 'Team A Updated' });
 
@@ -87,14 +89,9 @@ describe('Teams E2E Tests', () => {
     expect(response.body.message).toBe('Team updated successfully');
   });
 
-  it('should remove a team', async () => {
-    const agent = request.agent(app);
-    await agent.post('/api/v1/auth/login').send({
-      email: 'admin@example.com',
-      password: 'password123',
-    });
-
-    const response = await agent.delete(
+  it('Admin should remove a team', async () => {
+   
+    const response = await adminAgent.delete(
       `/api/v1/teams/${teamIds[1]}`,
     );
 
@@ -102,17 +99,32 @@ describe('Teams E2E Tests', () => {
     expect(response.body.message).toBe('Team deleted successfully');
   });
 
-  it('should view a team', async () => {
-    const agent = request.agent(app);
-    await agent.post('/api/v1/auth/login').send({
-      email: 'admin@example.com',
-      password: 'password123',
-    });
-
-    const response = await agent.get(`/api/v1/teams/${teamIds[2]}`);
+  it('Admin should view a team', async () => {
+   
+    const response = await adminAgent.get(`/api/v1/teams/${teamIds[2]}`);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Team fetched successfully');
     expect(response.body.data).toHaveProperty('name', 'Team C');
   });
+
+  it('User should view teams', async () => {
+   
+    const response = await userAgent.get(`/api/v1/teams`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Teams fetched successfully');
+  });
+
+  it('User should view team', async () => {
+   
+    const response = await userAgent.get(`/api/v1/teams/${teamIds[0]}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Team fetched successfully');
+  });
+
+
+
+  
 });
