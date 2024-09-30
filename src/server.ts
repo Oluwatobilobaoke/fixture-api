@@ -9,8 +9,6 @@ import { Logger } from './library/Logger';
 import { AppError, getCelebrateErrorMessage } from './helpers';
 import { appRoutes } from './routes';
 import redisService from './services/redisService';
-import { sessionAuth } from './middleware/authorize-user';
-import userRateLimiter from './middleware/limiter';
 
 const redisClient = redisService.client;
 
