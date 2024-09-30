@@ -30,17 +30,19 @@ describe('Fixtures E2E Tests', () => {
       dbName: config.mongo.dbNameTest,
     });
 
+    
+
     // Register admin user
     await request(app).post('/api/v1/auth/register/admins').send({
       name: 'Admin User',
-      email: 'adminfixtures@example.com',
+            email: 'adminteamm@example.com',
       password: 'password123',
     });
 
     // Register regular user
     await request(app).post('/api/v1/auth/register/users').send({
       name: 'Regular User',
-      email: 'userfixtures@example.com',
+      email: 'userteamm@example.com',
       password: 'password123',
     });
 
@@ -48,13 +50,13 @@ describe('Fixtures E2E Tests', () => {
     //@ts-ignore
     adminAgent = (await makeAuthenticatedAgent(
       app,
-      'adminfixtures@example.com',
+      'adminteamm@example.com',
       'password123',
     ));
     //@ts-ignore
     userAgent = (await makeAuthenticatedAgent(
       app,
-      'userfixtures@example.com',
+      'userteamm@example.com',
       'password123',
     ));
   });

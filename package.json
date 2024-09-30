@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "seed": "tsc && node dist/seeders/index.seeders.js",
     "pretesst": "npm run build && node dist/seeders/index.seeders.js",
-    "test": "jest --config jest.config.js --coverage --colors --forceExit"
+    "test": "jest --config jest.config.js --coverage --colors --forceExit",
+    "start:app": "npm run seed && npm run start"
   },
   "dependencies": {
     "@types/express-session": "^1.18.0",

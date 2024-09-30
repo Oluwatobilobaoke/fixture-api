@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    user: root
+    command: npm run start:app;
+    ports:
+      - '13019:13019'
+    networks:
+      - fixtures-network
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - SERVER_PORT=${SERVER_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - REDIS_HOST_NAME=fxitures_redis
+      - REDIS_PORT=6379
+      - SESSION_SECRET=${SESSION_SECRET}
+      - DB_NAME=${DB_NAME}
+      - DB_NAME_TEST=${DB_NAME_TEST}
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    container_name: fxitures_redis
+    image: redis/redis-stack-server:latest
+    restart: unless-stopped
+    networks:
+      - fixtures-network
+    ports:
+      - '6397:6379' #systemport:Dockerport
+    expose:
+      - '6379'
+    volumes:
+      - redis-data:/data
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  fixtures-network:
+
