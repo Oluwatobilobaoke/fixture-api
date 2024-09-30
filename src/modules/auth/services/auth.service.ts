@@ -53,6 +53,6 @@ export class AuthService {
       role: user.role,
     });
 
-    return { access_token };
+    return { access_token, user };
   }
 }
