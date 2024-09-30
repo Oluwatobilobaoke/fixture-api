@@ -33,14 +33,14 @@ describe('Fixtures E2E Tests', () => {
     // Register admin user
     await request(app).post('/api/v1/auth/register/admins').send({
       name: 'Admin User',
-      email: 'admin@example.com',
+      email: 'adminfixtures@example.com',
       password: 'password123',
     });
 
     // Register regular user
     await request(app).post('/api/v1/auth/register/users').send({
       name: 'Regular User',
-      email: 'user@example.com',
+      email: 'userfixtures@example.com',
       password: 'password123',
     });
 
@@ -48,13 +48,13 @@ describe('Fixtures E2E Tests', () => {
     //@ts-ignore
     adminAgent = (await makeAuthenticatedAgent(
       app,
-      'admin@example.com',
+      'adminfixtures@example.com',
       'password123',
     ));
     //@ts-ignore
     userAgent = (await makeAuthenticatedAgent(
       app,
-      'user@example.com',
+      'userfixtures@example.com',
       'password123',
     ));
   });

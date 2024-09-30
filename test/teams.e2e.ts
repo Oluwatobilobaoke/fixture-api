@@ -4,6 +4,8 @@ import { config } from '../src/config/config';
 import { app } from '../src/server';
 import User from '../src/models/User.model';
 import Team from '../src/models/Team.model';
+import Fixture from '../src/models/Fixture.model';
+
 import { Express } from 'express';
 
 
@@ -31,14 +33,14 @@ describe('Teams E2E Tests', () => {
         // Register admin user
     await request(app).post('/api/v1/auth/register/admins').send({
       name: 'Admin User',
-      email: 'admin@example.com',
+      email: 'adminteam@example.com',
       password: 'password123',
     });
 
     // Register regular user
     await request(app).post('/api/v1/auth/register/users').send({
       name: 'Regular User',
-      email: 'user@example.com',
+      email: 'userteam@example.com',
       password: 'password123',
     });
 
@@ -46,13 +48,13 @@ describe('Teams E2E Tests', () => {
     //@ts-ignore
     adminAgent = (await makeAuthenticatedAgent(
       app,
-      'admin@example.com',
+      'adminteam@example.com',
       'password123',
     ));
     //@ts-ignore
     userAgent = (await makeAuthenticatedAgent(
       app,
-      'user@example.com',
+      'userteam@example.com',
       'password123',
     ));
   });
@@ -60,6 +62,7 @@ describe('Teams E2E Tests', () => {
   afterAll(async () => {
     await User.deleteMany({});
     await Team.deleteMany({});
+    await Fixture.deleteMany({});
     await mongoose.connection.close();
   });
 
