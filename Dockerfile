@@ -1,30 +1,34 @@
-# from node 16
-FROM node:20-alpine AS BUILD_IMAGE
+# Build stage
+FROM node:18 AS builder
 
-# Work Directory
 WORKDIR /usr/src/app
 
+# Copy package.json and package-lock.json
 COPY package.json yarn.lock ./
 
-RUN yarn install --legacy-peer
+# Install dependencies, including devDependencies
+RUN yarn install --frozen-lockfile --production
 
+# Copy the rest of the application code
 COPY . .
 
-# build application
-RUN yarn build
+# Rebuild bcrypt
+RUN npm rebuild bcrypt --build-from-source
 
-# remove development dependencies
-#RUN npm prune --production
+# Production stage
+FROM node:18-slim
 
-# ------------------------ SECOND IMAGE ------------------------
-
-FROM node:20-alpine
-
-# Work Directory
 WORKDIR /usr/src/app
 
-COPY --from=BUILD_IMAGE /usr/src/app .
+# Copy package.json and package-lock.json
+COPY package*.json yarn.lock ./
 
-EXPOSE 13019
+# Install production dependencies only
+RUN npm ci --only=production --omit=dev
 
-CMD [ "yarn", "start" ]
+# Copy built modules and other files from builder stage
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY . .
+
+# # Your app's start command
+# CMD ["node", "app.js"]

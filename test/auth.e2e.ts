@@ -46,12 +46,10 @@ describe('Auth E2E Tests', () => {
 
   it('should logout admin', async () => {
     const agent = request.agent(app);
-    await agent
-      .post('/api/v1/auth/login')
-      .send({
-        email: 'admin@example.com',
-        password: 'password123',
-      });
+    await agent.post('/api/v1/auth/login').send({
+      email: 'admin@example.com',
+      password: 'password123',
+    });
 
     const response = await agent.post('/api/v1/auth/logout');
 
@@ -87,12 +85,10 @@ describe('Auth E2E Tests', () => {
 
   it('should logout user', async () => {
     const agent = request.agent(app);
-    await agent
-      .post('/api/v1/auth/login')
-      .send({
-        email: 'user@example.com',
-        password: 'password123',
-      });
+    await agent.post('/api/v1/auth/login').send({
+      email: 'user@example.com',
+      password: 'password123',
+    });
 
     const response = await agent.post('/api/v1/auth/logout');
 
@@ -100,4 +96,3 @@ describe('Auth E2E Tests', () => {
     expect(response.body.message).toBe('Logout successful');
   });
 });
-

@@ -1,5 +1,7 @@
 # Software Developer Application Test
+
 ## sudo docker compose up --build -d --force-recreate
+
 Create an API that serves the latest scores of fixtures of matches in a “**Mock Premier League**”
 
 ## User Types

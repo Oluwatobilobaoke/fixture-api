@@ -8,7 +8,6 @@ import Fixture from '../src/models/Fixture.model';
 
 import { Express } from 'express';
 
-
 async function makeAuthenticatedAgent(
   app: Express,
   email: string,
@@ -30,7 +29,7 @@ describe('Teams E2E Tests', () => {
       dbName: config.mongo.dbNameTest,
     });
 
-        // Register admin user
+    // Register admin user
     await request(app).post('/api/v1/auth/register/admins').send({
       name: 'Admin User',
       email: 'adminteam@example.com',
@@ -46,17 +45,17 @@ describe('Teams E2E Tests', () => {
 
     // Create authenticated agents
     //@ts-ignore
-    adminAgent = (await makeAuthenticatedAgent(
+    adminAgent = await makeAuthenticatedAgent(
       app,
       'adminteam@example.com',
       'password123',
-    ));
+    );
     //@ts-ignore
-    userAgent = (await makeAuthenticatedAgent(
+    userAgent = await makeAuthenticatedAgent(
       app,
       'userteam@example.com',
       'password123',
-    ));
+    );
   });
 
   afterAll(async () => {
@@ -69,7 +68,6 @@ describe('Teams E2E Tests', () => {
   it('Admin should create 3 teams', async () => {
     const teamNames = ['Team A', 'Team B', 'Team C', 'Team D'];
     for (const name of teamNames) {
-        
       // Use the authenticated session to create a team
       const response = await adminAgent
         .post('/api/v1/teams')
@@ -83,7 +81,6 @@ describe('Teams E2E Tests', () => {
   });
 
   it('Adminshould edit a team', async () => {
-   
     const response = await adminAgent
       .patch(`/api/v1/teams/${teamIds[0]}`)
       .send({ name: 'Team A Updated' });
@@ -93,7 +90,6 @@ describe('Teams E2E Tests', () => {
   });
 
   it('Admin should remove a team', async () => {
-   
     const response = await adminAgent.delete(
       `/api/v1/teams/${teamIds[1]}`,
     );
@@ -103,8 +99,9 @@ describe('Teams E2E Tests', () => {
   });
 
   it('Admin should view a team', async () => {
-   
-    const response = await adminAgent.get(`/api/v1/teams/${teamIds[2]}`);
+    const response = await adminAgent.get(
+      `/api/v1/teams/${teamIds[2]}`,
+    );
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Team fetched successfully');
@@ -112,7 +109,6 @@ describe('Teams E2E Tests', () => {
   });
 
   it('User should view teams', async () => {
-   
     const response = await userAgent.get(`/api/v1/teams`);
 
     expect(response.status).toBe(200);
@@ -120,14 +116,11 @@ describe('Teams E2E Tests', () => {
   });
 
   it('User should view team', async () => {
-   
-    const response = await userAgent.get(`/api/v1/teams/${teamIds[0]}`);
+    const response = await userAgent.get(
+      `/api/v1/teams/${teamIds[0]}`,
+    );
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Team fetched successfully');
   });
-
-
-
-  
 });
