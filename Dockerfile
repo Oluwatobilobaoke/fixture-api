@@ -1,5 +1,5 @@
 # from node 16
-FROM node:16 AS BUILD_IMAGE
+FROM node:20-alpine AS BUILD_IMAGE
 
 # Work Directory
 WORKDIR /usr/src/app
@@ -18,13 +18,13 @@ RUN yarn build
 
 # ------------------------ SECOND IMAGE ------------------------
 
-FROM node:16
+FROM node:20-alpine
 
 # Work Directory
 WORKDIR /usr/src/app
 
 COPY --from=BUILD_IMAGE /usr/src/app .
 
-EXPOSE 7077
+EXPOSE 13019
 
 CMD [ "yarn", "start" ]
