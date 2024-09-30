@@ -11,7 +11,7 @@ export const seeders = async () => {
     .connect(config.mongo.url, {
       retryWrites: true,
       w: 'majority',
-      dbName: 'fixture-api-db',
+      dbName: config.mongo.dbName,
     })
     .then(async () => {
       console.log('MongoDB connected for seeders');
@@ -32,6 +32,13 @@ export const seeders = async () => {
   console.log('Seeders run successfully');
 };
 
+// start seeders and exit
 seeders()
-  .then((r) => {})
-  .catch((e) => console.error(e));
+  .then(() => {
+    console.log('Seeders completed. Exiting...');
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error('Error running seeders:', error);
+    process.exit(1);
+  });

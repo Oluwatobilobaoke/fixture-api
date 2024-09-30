@@ -79,11 +79,7 @@ export class TeamsService {
     const result = { teams, pagination };
 
     // Cache the result
-    await redisService.setex(
-      cacheKey,
-      JSON.stringify(result),
-      300,
-    ); // Cache for 5 min
+    await redisService.setex(cacheKey, JSON.stringify(result), 300); // Cache for 5 min
 
     return result;
   }

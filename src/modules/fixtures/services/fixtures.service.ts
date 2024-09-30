@@ -55,12 +55,17 @@ export class FixturesService {
         `Fixture with homeTeam ${homeTeam} or awayTeam ${awayTeam} on that exact date ${date} already exists`,
       );
 
-    await this.fixtureRepository.create({
+    const fixture = await this.fixtureRepository.create({
       homeTeam,
       awayTeam,
       date,
       uniqueLink: `${homeTeam}-${awayTeam}-${date}`,
     });
+
+    const key = redisService.createKey('fixture', fixture._id);
+    redisService.setCache(key, fixture);
+
+    return fixture;
   }
 
   async getAllFixturess() {
@@ -226,3 +231,4 @@ export class FixturesService {
     };
   }
 }
+

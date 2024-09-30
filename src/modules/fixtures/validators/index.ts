@@ -8,6 +8,10 @@ export const fixturesValidator = {
       homeTeam: Joi.string().required(),
       awayTeam: Joi.string().required(),
       date: Joi.string().required(),
+      uniqueLink: Joi.string().optional(),
+      status: Joi.string()
+        .valid(...statusEnum)
+        .optional(),
     }),
   }),
   verifyFixtureParams: celebrate({

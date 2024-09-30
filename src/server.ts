@@ -14,23 +14,8 @@ const redisClient = redisService.client;
 
 const app = express();
 
-// MongoDB
-mongoose
-  .connect(config.mongo.url, {
-    retryWrites: true,
-    w: 'majority',
-    dbName: 'fixture-api-db',
-  })
-  .then(() => {
-    Logger.info('MongoDB connected');
-    startServer();
-  })
-  .catch((error) => {
-    Logger.error('MongoDB connection error');
-    Logger.error(error);
-  });
-
-const startServer = () => {
+// Configure app
+const configureApp = () => {
   app.use((req, res, next) => {
     Logger.info(
       `Incoming - Method: ${req.method} - URL: ${req.url} - IP: ${req.socket.remoteAddress}`,
@@ -105,6 +90,13 @@ const startServer = () => {
     });
   });
 
+  // DEFAULT
+  app.get('/', (req, res) => {
+    return res.status(200).json({
+      message: 'API OK!! 👍🏽📌',
+    });
+  });
+
   // ERROR HANDLING
   app.use((req, res, next) => {
     const error = new Error('Not found');
@@ -136,8 +128,30 @@ const startServer = () => {
       error: err.error,
     });
   });
+};
 
+// MongoDB
+mongoose
+  .connect(config.mongo.url, {
+    retryWrites: true,
+    w: 'majority',
+    dbName: config.mongo.dbName,
+  })
+  .then(() => {
+    Logger.info('MongoDB connected');
+    configureApp();
+  })
+  .catch((error) => {
+    Logger.error('MongoDB connection error');
+    Logger.error(error);
+  });
+
+const startServer = () => {
   http.createServer(app).listen(config.server.port, () => {
     Logger.info(`Server is running on PORT: ${config.server.port}`);
   });
 };
+
+configureApp(); // Configure app immediately for testing purposes
+
+export { app, startServer };

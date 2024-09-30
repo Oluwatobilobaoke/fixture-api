@@ -89,7 +89,7 @@ export const seedFixtures = async () => {
           awayTeam,
           date: (baseDate += 1000).toString(),
           status,
-          uniqueLink: `fixture-${homeTeam}-${awayTeam}-${baseDate}`,
+          uniqueLink: `fixture-${homeTeam}-${awayTeam}-${baseDate}-${Math.random().toString(36).substring(7)}`,
           homeResult: '',
           awayResult: '',
         };
