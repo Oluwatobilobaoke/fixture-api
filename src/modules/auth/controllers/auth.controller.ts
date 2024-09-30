@@ -53,9 +53,35 @@ export class AuthController {
     try {
       const payload: LoginUserDto = req.body;
       const user = await authService.loginUser(payload);
+
+      // Store JWT in the session
+      if (user.access_token) {
+        //@ts-ignore
+        req.session.jwt = user.access_token;
+      }
+
       return res
         .status(200)
         .json({ message: 'User logged in successfully', data: user });
+    } catch (error) {
+      Logger.error(error);
+      next(error);
+    }
+  }
+  static async logout(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+        //@ts-ignore
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Logout failed' });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Logout successful' });
+      });
     } catch (error) {
       Logger.error(error);
       next(error);

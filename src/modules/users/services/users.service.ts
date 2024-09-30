@@ -3,6 +3,9 @@ import { IUserModel } from '../../../models/User.model';
 import { CreateUserDto } from '../dtos/CreateUserDto.dto';
 import { getPagination } from '../../../library/pagination.utils';
 import { IGeT } from '../../common/interface';
+import redisService from '../../../services/redisService';
+
+
 
 export class UsersService {
   constructor(private userRepository: Model<IUserModel>) {}

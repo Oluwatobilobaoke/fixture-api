@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  authenticate,
+  sessionAuth,
   authenticateAndisAdmin,
 } from '../../../middleware/authorize-user';
 import { FixturesController } from '../controllers/fixtures.controller';
@@ -16,14 +16,14 @@ router.post(
 
 router.get(
   '/',
-  authenticate,
+  sessionAuth,
   fixturesValidator.verifyFixtureQuery,
   FixturesController.getFixtures,
 );
 
 router.get(
   '/:id',
-  authenticate,
+  sessionAuth,
   fixturesValidator.verifyFixtureParams,
   FixturesController.getFixture,
 );

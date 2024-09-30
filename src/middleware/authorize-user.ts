@@ -52,11 +52,42 @@ export const authenticateAndisAdmin = (
   res: Response,
   next: NextFunction,
 ) => {
-  authenticate(req, res, (authError) => {
+  sessionAuth(req, res, (authError) => {
     if (authError) {
       return next(authError);
     }
 
     isAdmin(req, res, next);
   });
+};
+
+// Middleware to verify the JWT token from session
+export const sessionAuth = (
+  req: Request,
+  _: Response,
+  next: NextFunction,
+) => {
+  try {
+    //@ts-ignore
+    const token = req.session.jwt;
+
+    if (!token) {
+      throw new AppError(401, 'Unauthorized, please log in');
+    }
+
+    // Verify the JWT token
+    try {
+      const res: any = jwt.verify(token, config.jwt.secret);
+      (req as any).user = {
+        id: res.id,
+        email: res.email,
+        role: res.role,
+      };
+    } catch (err: any) {
+      next(err);
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
 };

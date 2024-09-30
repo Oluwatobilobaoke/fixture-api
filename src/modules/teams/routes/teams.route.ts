@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  authenticate,
+  sessionAuth,
   authenticateAndisAdmin,
 } from '../../../middleware/authorize-user';
 import { teamsValidator } from '../validators';
@@ -17,14 +17,14 @@ router.post(
 
 router.get(
   '/',
-  authenticate,
+  sessionAuth,
   teamsValidator.verifyTeamQuery,
   TeamsController.getTeams,
 );
 
 router.get(
   '/:id',
-  authenticate,
+  sessionAuth,
   teamsValidator.verifyTeamParams,
   TeamsController.getTeam,
 );

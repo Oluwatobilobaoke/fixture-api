@@ -13,9 +13,7 @@ import {
   isTimestampInPast,
   timestampToDate,
 } from '../../../library/date.utils';
-import { RedisService } from '../../../services/redisService';
-
-const redisService = new RedisService();
+import redisService from '../../../services/redisService';
 
 export class FixturesService {
   constructor(private fixtureRepository: Model<IFixtureModel>) {}
@@ -109,13 +107,26 @@ export class FixturesService {
   }
 
   async getFixtureById(id: string) {
+    const key = redisService.createKey('fixture', id);
+    let cacheFixture = await redisService.getCache(key);
+
+    if (cacheFixture) {
+      return JSON.parse(cacheFixture);
+    }
+
     const fixture = await this.fixtureRepository
       .findOne({ _id: id, isDeleted: false })
       .populate(['homeTeam', 'awayTeam']);
+
+    if (fixture) {
+      redisService.setCache(key, this.formatFixtureResponse(fixture));
+    }
     return this.formatFixtureResponse(fixture);
   }
 
   async updateFixture(id: string, data: UpdateFixtureDto) {
+    const key = redisService.createKey('fixture', id);
+
     // check date is part of data then check if it is in the past
     if (data?.date && isTimestampInPast(Number(data?.date)))
       throw new AppError(400, 'Date must be in the future');
@@ -126,10 +137,15 @@ export class FixturesService {
       })
       .populate(['homeTeam', 'awayTeam']);
 
+    redisService.setCache(key, this.formatFixtureResponse(fixture));
+
     return this.formatFixtureResponse(fixture);
   }
 
   async deleteFixture(id: string) {
+    const key = redisService.createKey('fixture', id);
+    redisService.del(key);
+
     return this.fixtureRepository.findByIdAndUpdate(id, {
       isDeleted: true,
       isDeletedAt: new Date(),

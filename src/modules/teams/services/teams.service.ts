@@ -1,11 +1,9 @@
 import { Model } from 'mongoose';
-import Team, { ITeamModel } from '../../../models/Team.model';
+import { ITeamModel } from '../../../models/Team.model';
 import { CreateTeamDto, UpdateTeamDto } from '../dtos/TeamDto.dto';
 import { getPagination } from '../../../library/pagination.utils';
 import { AppError } from '../../../helpers';
-import { RedisService } from '../../../services/redisService';
-
-const redisService = new RedisService();
+import redisService from '../../../services/redisService';
 
 export class TeamsService {
   constructor(private teamRepository: Model<ITeamModel>) {}
@@ -76,7 +74,7 @@ export class TeamsService {
 
   async getTeamById(id: string) {
     const key = redisService.createKey('team', id);
-    let team = await redisService.getCache(key);
+    let team = await redisService.getCache(key); 
 
     if (team) {
       return JSON.parse(team);

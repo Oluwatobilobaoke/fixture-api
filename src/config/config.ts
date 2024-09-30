@@ -9,6 +9,7 @@ const SERVER_PORT = process.env.SERVER_PORT
 const JWT_SECRET = process.env.JWT_SECRET ?? '';
 const REDIS_HOST = process.env.REDIS_HOST ?? '';
 const REDIS_PORT = process.env.REDIS_PORT ?? '';
+const SESSION_SECRET = process.env.SESSION_SECRET ?? '';
 
 export const config = {
   mongo: {
@@ -23,5 +24,8 @@ export const config = {
   redis: {
     host: REDIS_HOST,
     port: REDIS_PORT,
+  },
+  session: {
+    secret: SESSION_SECRET,
   },
 };

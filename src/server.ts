@@ -2,11 +2,15 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import { isCelebrateError } from 'celebrate';
+import session from 'express-session';
+import RedisStore from 'connect-redis';
 import { config } from './config/config';
 import { Logger } from './library/Logger';
 import { AppError, getCelebrateErrorMessage } from './helpers';
 import { appRoutes } from './routes';
-import { RedisService } from './services/redisService';
+import redisService from './services/redisService';
+
+const redisClient = redisService.client;
 
 const app = express();
 
@@ -26,8 +30,6 @@ mongoose
     Logger.error(error);
   });
 
-// new RedisService();
-
 const startServer = () => {
   app.use((req, res, next) => {
     Logger.info(
@@ -41,6 +43,28 @@ const startServer = () => {
 
     next();
   });
+
+  // Set up Redis-based session store
+  const redisStore = new RedisStore({
+    client: redisClient,
+    prefix: 'sess:',
+    ttl: 86400, // 1 day TTL
+  });
+
+  // Configure session middleware
+  app.use(
+    session({
+      store: redisStore,
+      secret: config.session.secret, // Replace with your own secret
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: false, // Set to true if using HTTPS
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24, // Session expires in 1 day
+      },
+    }),
+  );
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());

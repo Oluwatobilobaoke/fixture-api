@@ -2,8 +2,8 @@ import Redis from 'ioredis';
 import { config } from '../config/config';
 import { Logger } from '../library/Logger';
 
-export class RedisService {
-  private client;
+class RedisService {
+  public client;
 
   constructor() {
     this.client = new Redis({
@@ -45,7 +45,9 @@ export class RedisService {
   }
 
   // create key for saving data
-  createKey(key: string, id: string): string {
+  createKey(key: string, id: any): string {
     return `${key}:${id}`;
   }
 }
+
+export default new RedisService();
