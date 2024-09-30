@@ -56,8 +56,8 @@ export class AuthController {
 
       // Store JWT in the session
       if (user.access_token) {
-        //@ts-ignore
         req.session.jwt = user.access_token;
+        req.session.user = user;
       }
 
       return res
@@ -74,7 +74,6 @@ export class AuthController {
     next: NextFunction,
   ) {
     try {
-      //@ts-ignore
       req.session.destroy((err) => {
         if (err) {
           return res.status(500).json({ message: 'Logout failed' });
