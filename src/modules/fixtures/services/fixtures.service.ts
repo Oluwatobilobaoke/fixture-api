@@ -141,6 +141,86 @@ export class FixturesService {
     return result;
   }
 
+
+  async getAllFixtures(request: any) {
+  const cacheKey = this.generateCacheKey(request.query);
+  let cachedData = await redisService.getCache(cacheKey);
+
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  const queryObject: any = {
+    isDeleted: false,
+  };
+
+  const { search, status, skip = 0, limit = 10, startDate, endDate } = request.query;
+
+  // Handle full-text search for team names and nicknames
+  if (search !== undefined && search.length) {
+    const matchingTeams = await this.teamRepository
+      .find({
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { nickname: { $regex: search, $options: 'i' } },
+        ],
+      })
+      .select('_id');
+
+    const teamIds = matchingTeams.map((team) => team._id);
+
+    queryObject.$or = [
+      { homeTeam: { $in: teamIds } },
+      { awayTeam: { $in: teamIds } },
+      { status: { $regex: search, $options: 'i' } },
+      { uniqueLink: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  // Handle date range search
+  if (startDate && endDate) {
+    queryObject.date = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  } else if (startDate) {
+    queryObject.date = {
+      $gte: new Date(startDate),
+    };
+  } else if (endDate) {
+    queryObject.date = {
+      $lte: new Date(endDate),
+    };
+  }
+
+  // Handle status filter
+  if (status !== undefined && status.length) {
+    queryObject.status = status;
+  }
+
+  const fixtures = await this.fixtureRepository
+    .find(queryObject)
+    .populate(['homeTeam', 'awayTeam'])
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .exec();
+
+  const count = await this.fixtureRepository
+    .countDocuments(queryObject)
+    .exec();
+
+  const pagination = getPagination(count, Number(skip), Number(limit));
+
+  const result = {
+    fixtures: fixtures.map((fixture) => this.formatFixtureResponse(fixture)),
+    pagination,
+  };
+
+  // Cache for 5 minutes
+  await redisService.setex(cacheKey, result, 300);
+
+  return result;
+}
   async getFixtureById(id: string) {
     const key = redisService.createKey('fixture', id);
     let cacheFixture = await redisService.getCache(key);
