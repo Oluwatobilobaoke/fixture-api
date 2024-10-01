@@ -6,10 +6,8 @@ class RedisService {
   public client;
 
   constructor() {
-    this.client = new Redis({
-      port: parseInt(config.redis.port, 10),
-      host: config.redis.host,
-    });
+    const url = config.redis.url;
+    this.client = new Redis(url);
 
     this.client.on('connect', () => {
       Logger.info('Redis connected');

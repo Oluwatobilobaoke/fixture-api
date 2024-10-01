@@ -1,41 +1,34 @@
 # Build stage
-FROM node:18 AS builder
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3 \
-    && rm -rf /var/lib/apt/lists/*
+FROM node:20 AS builder
 
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Copy package.json and yarn.lock
 COPY package.json yarn.lock ./
 
-# Install dependencies, including devDependencies
+# Install ALL dependencies (including devDependencies)
 RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
 
-# Build the application (assuming you have a build script)
-RUN npm run build
+# Compile TypeScript to JavaScript
+RUN yarn tsc
 
 # Production stage
-FROM node:18-slim
+FROM node:20-slim
 
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
-COPY package*.json yarn.lock ./
+# Copy package.json and yarn.lock
+COPY package.json yarn.lock ./
 
-# Install production dependencies only
+# Install only production dependencies
 RUN yarn install --frozen-lockfile --production
 
-# Copy built files from builder stage
+# Copy compiled JavaScript from builder stage
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Rebuild bcrypt
-RUN npm rebuild bcrypt --build-from-source
 
-# Your app's start command
+# Your app's start command (adjust as needed)
 # CMD ["node", "dist/app.js"]

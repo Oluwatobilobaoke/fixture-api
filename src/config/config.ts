@@ -9,6 +9,7 @@ const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
   : 13019;
 const JWT_SECRET = process.env.JWT_SECRET ?? '';
+const REDIS_URL = process.env.REDIS_URL ?? '';  
 const REDIS_HOST = process.env.REDIS_HOST ?? '';
 const REDIS_PORT = process.env.REDIS_PORT ?? '';
 const SESSION_SECRET = process.env.SESSION_SECRET ?? '';
@@ -26,6 +27,7 @@ export const config = {
     secret: JWT_SECRET,
   },
   redis: {
+    url: REDIS_URL,
     host: REDIS_HOST,
     port: REDIS_PORT,
   },
