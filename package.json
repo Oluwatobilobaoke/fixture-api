@@ -7,13 +7,12 @@
     "start": "node dist/index.js",
     "build": "rm -rf build && tsc -p .",
     "start:dev": "tsc-watch --onSuccess \"node dist/index.js\"",
-    "jest": "npx jest --coverage",
-    "test:e2e": "jest --config jest.config.js",
     "format": "prettier --write .",
     "build:seed": "tsc && node dist/seeders/index.seeders.js",
     "seed": "node dist/seeders/index.seeders.js",
     "pretesst": "node dist/seeders/index.seeders.js",
-    "test": "jest --config jest.config.js --coverage --colors --forceExit",
+    "test:e2e": "jest --config jest.config.js --coverage --colors --forceExit",
+    "test:unit": "jest --testMatch=\"**/*.test.[jt]s?(x)\"",
     "start:app": "npm run seed && npm run start"
   },
   "dependencies": {
