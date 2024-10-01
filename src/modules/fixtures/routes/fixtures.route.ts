@@ -10,35 +10,40 @@ const router = express();
 
 router.post(
   '/',
-  authenticateAndisAdmin,userRateLimiter,
+  authenticateAndisAdmin,
+  userRateLimiter,
   fixturesValidator.verifyBody,
   FixturesController.addFixture,
 );
 
 router.get(
   '/',
-  sessionAuth,userRateLimiter,
+  sessionAuth,
+  userRateLimiter,
   fixturesValidator.verifyFixtureQuery,
   FixturesController.getFixtures,
 );
 
 router.get(
   '/:id',
-  sessionAuth,userRateLimiter,
+  sessionAuth,
+  userRateLimiter,
   fixturesValidator.verifyFixtureParams,
   FixturesController.getFixture,
 );
 
 router.patch(
   '/:id',
-  authenticateAndisAdmin,userRateLimiter,
+  authenticateAndisAdmin,
+  userRateLimiter,
   fixturesValidator.verifyFixtureParamsAndBody,
   FixturesController.editFixture,
 );
 
 router.delete(
   '/:id',
-  authenticateAndisAdmin,userRateLimiter,
+  authenticateAndisAdmin,
+  userRateLimiter,
   fixturesValidator.verifyFixtureParams,
   FixturesController.deleteFixture,
 );

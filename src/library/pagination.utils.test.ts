@@ -1,4 +1,3 @@
-
 import { getPagination } from './pagination.utils';
 
 describe('getPagination', () => {

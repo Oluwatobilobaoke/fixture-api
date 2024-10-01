@@ -1,11 +1,10 @@
 # Readme
 
-
 An API that serves the latest scores of fixtures of matches in a “**Mock Premier League**”
 
 ## Tools/Stack
 
-- NodeJs (TypeScript & Express) 
+- NodeJs (TypeScript & Express)
 - MongoDB
 - Redis
 - Docker
@@ -21,16 +20,20 @@ An API that serves the latest scores of fixtures of matches in a “**Mock Premi
 ## Installation
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/Oluwatobilobaoke/fixture-api.git
    cd fixture-api
    ```
 
 2. Install dependencies:
+
    ```
    npm install
    ```
+
    or if you prefer yarn:
+
    ```
    yarn install
    ```
@@ -46,6 +49,7 @@ An API that serves the latest scores of fixtures of matches in a “**Mock Premi
 To start the development server:
 
 1. Start the Docker containers:
+
    ```
    docker-compose up
    ```
@@ -60,16 +64,13 @@ To start the development server:
 To run the tests:
 
 1. Run e2e tests:
+
 ```
 npm run test:e2e
 ```
 
 2. Run unit tests:
+
 ```
 npm run test:unit
 ```
-
-
-
-
-

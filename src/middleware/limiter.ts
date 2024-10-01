@@ -6,7 +6,8 @@ const userRateLimiter = rateLimit({
   keyGenerator: (req) => {
     return req.session?.user?._id || req.ip;
   },
-  message: 'Too many requests from this user, please try again later.',
+  message:
+    'Too many requests from this user, please try again later.',
 });
 
 export default userRateLimiter;

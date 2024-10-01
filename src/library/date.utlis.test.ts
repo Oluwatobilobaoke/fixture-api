@@ -1,4 +1,8 @@
-import { timestampToDate, getCurrentTimestamp, isTimestampInPast } from './date.utils';
+import {
+  timestampToDate,
+  getCurrentTimestamp,
+  isTimestampInPast,
+} from './date.utils';
 
 describe('timestampToDate', () => {
   it('should convert a valid timestamp to a Date object', () => {

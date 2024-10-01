@@ -24,8 +24,8 @@ describe('FixturesService', () => {
     );
 
     await fixturesService.createFixture(createFixtureDto);
-    expect(fixtureRepositoryMock.findOne).toHaveBeenCalled()
-    expect(fixtureRepositoryMock.create).toHaveBeenCalled()
+    expect(fixtureRepositoryMock.findOne).toHaveBeenCalled();
+    expect(fixtureRepositoryMock.create).toHaveBeenCalled();
   });
 
   // update fixture with given id and data successfully
@@ -125,6 +125,9 @@ describe('FixturesService', () => {
 
     const result = await fixturesService.getFixtureById(id);
     expect(result).toBeDefined();
-    expect(fixtureRepositoryMock.findOne).toHaveBeenCalledWith({ _id: id, isDeleted: false });
+    expect(fixtureRepositoryMock.findOne).toHaveBeenCalledWith({
+      _id: id,
+      isDeleted: false,
+    });
   });
 });

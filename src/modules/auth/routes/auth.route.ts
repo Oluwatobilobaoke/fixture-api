@@ -17,6 +17,11 @@ router.post(
   AuthController.registerAdmin,
 );
 router.post('/login', authValidator.login, AuthController.login);
-router.post('/logout', sessionAuth, userRateLimiter, AuthController.logout);
+router.post(
+  '/logout',
+  sessionAuth,
+  userRateLimiter,
+  AuthController.logout,
+);
 
 export const AuthRoutes = router;

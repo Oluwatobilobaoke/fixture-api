@@ -31,7 +31,6 @@ services:
     networks:
       - fixtures-network
 
-
 volumes:
   redis-data:
 

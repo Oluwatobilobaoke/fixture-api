@@ -1,10 +1,16 @@
-import { createToken, getCelebrateErrorMessage, AppError } from './index';
+import {
+  createToken,
+  getCelebrateErrorMessage,
+  AppError,
+} from './index';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config';
 
 describe('AppError', () => {
   it('should create an error with the correct properties', () => {
-    const error = new AppError(404, 'Not Found', { detail: 'Resource not found' });
+    const error = new AppError(404, 'Not Found', {
+      detail: 'Resource not found',
+    });
     expect(error.code).toBe(404);
     expect(error.message).toBe('Not Found');
     expect(error.status).toBe('fail');
@@ -36,8 +42,8 @@ describe('getCelebrateErrorMessage', () => {
   it('should return the correct error message', () => {
     const err = {
       details: new Map([
-        ['body', { details: [{ message: '"name" is required' }] }]
-      ])
+        ['body', { details: [{ message: '"name" is required' }] }],
+      ]),
     };
     const message = getCelebrateErrorMessage(err);
     expect(message).toBe('name is required');

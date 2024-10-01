@@ -11,35 +11,40 @@ const router = express();
 
 router.post(
   '/',
-  authenticateAndisAdmin, userRateLimiter,
+  authenticateAndisAdmin,
+  userRateLimiter,
   teamsValidator.verifyBody,
   TeamsController.addTeam,
 );
 
 router.get(
   '/',
-  sessionAuth, userRateLimiter,
+  sessionAuth,
+  userRateLimiter,
   teamsValidator.verifyTeamQuery,
   TeamsController.getTeams,
 );
 
 router.get(
   '/:id',
-  sessionAuth,userRateLimiter,
+  sessionAuth,
+  userRateLimiter,
   teamsValidator.verifyTeamParams,
   TeamsController.getTeam,
 );
 
 router.patch(
   '/:id',
-  authenticateAndisAdmin,userRateLimiter,
+  authenticateAndisAdmin,
+  userRateLimiter,
   teamsValidator.verifyProductParamsAndBody,
   TeamsController.editTeam,
 );
 
 router.delete(
   '/:id',
-  authenticateAndisAdmin, userRateLimiter,
+  authenticateAndisAdmin,
+  userRateLimiter,
   teamsValidator.verifyTeamParams,
   TeamsController.deleteTeam,
 );
