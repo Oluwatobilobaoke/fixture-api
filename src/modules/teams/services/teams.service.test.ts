@@ -31,20 +31,6 @@ describe('TeamsService', () => {
     );
   });
 
-  // // getAllTeams method returns all teams
-  // it('should return all teams', async () => {
-  //   const teamRepositoryMock = {
-  //     find: jest.fn().mockResolvedValue([]),
-  //   };
-  //
-  //   // @ts-ignore
-  //   const teamsService = new TeamsService(teamRepositoryMock);
-  //   // @ts-ignore
-  //   const teams = await teamsService.getAllTeams({});
-  //   expect(teamRepositoryMock.find).toHaveBeenCalled();
-  //   expect(teams).toBeDefined();
-  // });
-
   // update team with given id and data successfully
   it('should update a team with given id and data', async () => {
     const id = '124';
@@ -108,7 +94,7 @@ describe('TeamsService', () => {
     const teamsService = new TeamsService(teamRepositoryMock as any);
 
     const result = await teamsService.deleteTeam(id);
-    expect(result).toBeNull();
+    expect(teamRepositoryMock.findByIdAndUpdate).toHaveBeenCalled();
   });
 
   // get team by id

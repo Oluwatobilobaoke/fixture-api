@@ -53,24 +53,21 @@ describe('AuthController', () => {
   });
 
   // AuthController can successfully log in a user
-  it('should log in a user successfully', async () => {
+  it("should log in a user successfully", async () => {
     const req = { body: {} };
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     const next = jest.fn();
-    authService.loginUser = jest.fn().mockResolvedValueOnce({
-      name: 'John',
-      email: 'john@example.com',
-    });
+    authService.loginUser = jest
+      .fn()
+      .mockResolvedValueOnce({ access_token: "1234567890", user: { name: "John", email: "john@example.com" } });
     // @ts-ignore
     await AuthController.login(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalled()
     expect(next).not.toHaveBeenCalled();
   });
+
 
   // AuthController returns the correct HTTP status codes for unsuccessful requests
   it('should return the correct HTTP status codes for unsuccessful requests', async () => {
@@ -107,16 +104,13 @@ describe('AuthController', () => {
   });
 
   // AuthController handles errors appropriately and passes them to the error handling middleware for unsuccessful requests
-  it('should handle errors appropriately and pass them to the error handling middleware for unsuccessful requests', async () => {
+  it("should handle errors appropriately and pass them to the error handling middleware for unsuccessful requests", async () => {
     const req = { body: {} };
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     const next = jest.fn();
     authService.registerUser = jest
       .fn()
-      .mockRejectedValueOnce(new Error('Registration failed'));
+      .mockRejectedValueOnce(new Error("Registration failed"));
     // @ts-ignore
     await AuthController.registerUser(req, res, next);
 

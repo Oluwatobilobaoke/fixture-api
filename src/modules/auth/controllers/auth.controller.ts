@@ -55,7 +55,7 @@ export class AuthController {
       const user = await authService.loginUser(payload);
 
       // Store JWT in the session
-      if (user.access_token) {
+      if (user?.access_token) {
         req.session.jwt = user.access_token;
         req.session.user = user?.user;
       }
