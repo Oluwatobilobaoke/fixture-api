@@ -2,6 +2,8 @@
 
 An API that serves the latest scores of fixtures of matches in a “**Mock Premier League**”
 
+https://documenter.getpostman.com/view/8996154/2sAXqzWJSF
+
 ## Tools/Stack
 
 - NodeJs (TypeScript & Express)
